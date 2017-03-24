@@ -77,7 +77,7 @@ expand <- function(inventory, n.new, time, replacement.value=1000){
 
   inventory.add <- data.frame(ID=idmin:(idmin+n.new-1),
                               time.construction=time,
-                              replacement.value=NA,
+                              replacement.value=replacement.value,
                               damage.potential=NA,
                               n.failure=0,
                               time.last.failure=NA,

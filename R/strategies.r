@@ -44,17 +44,19 @@
 
 ## -----------
 ## replace pipe at 'idx' in the inventory with a new one
-replace.pipe <- function(idx, inv, time)
-{
+replace.pipe <- function(idx, inv, time){
 
-  if(nrow(inventory)>0){
-    id <- max(inventory$ID) + 1
+  ## get new ID
+  if(nrow(inv)>0){
+    id <- max(inv$ID) + 1
   } else {
     id <- 1
   }
 
-  inv$time.end.of.service[idx] <- time  # retire old pipe
-  
+                                        # retire old pipe
+  inv$time.end.of.service[idx] <- time  
+
+                                        # add new pipe
   new.pipe <- data.frame(ID=id,
                          time.construction=time,
                          replacement.value=inv$replacement.value[idx],
@@ -90,22 +92,21 @@ do.nothing <- function(state){
 ##' @author Andreas Scheidegger
 replace.oldest <- function(state, n.max, time){
   inv = state$inventory
-  budget = state$inventory
+  budget = state$budget
   
   ## find the index of the n oldest pipes *in use*
   is.active <- is.na(inv$time.end.of.service)
-  idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:n]
+  idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:(min(n.max, nrow(inv)))]
 
   ## build new pipes
   for(i in idx) {
     if(budget < inv$replacement.value[i]){
       break
     } else {
-      budget <- budget - inv$replacement.value[i]
-      
-      inv$time.end.of.service[i] <- time  # retire old pipe
-      inv <- replace.pipe(i, inv)       # 
+      budget <- budget - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)       # get new pipe
     }
   }
+  
   return(list(inventory=inv, budget=budget))
 }

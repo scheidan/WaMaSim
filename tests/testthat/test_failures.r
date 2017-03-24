@@ -46,3 +46,23 @@ test_that("replace pipe", {
   expect_equal(inv.replaced$time.end.of.service[1], 3)
   expect_equal(inv.replaced$n.failure[nn], 0)
 })
+
+
+
+nn <- nrow(inv.failed)
+state1 <- list(inventory=inv.failed, budget=30000)
+state2 <- list(inventory=inv.failed, budget=2000)
+
+
+test_that("replace oldest", {
+
+  s1 <- replace.oldest(state=state1, n.max=Inf, time=10)$inventory
+  expect_equal(nrow(s1), nn+nn)
+  s2 <- replace.oldest(state=state1, n.max=3, time=10)$inventory
+  expect_equal(nrow(s2), nn+3)
+  s3 <- replace.oldest(state=state2, n.max=Inf, time=10)$inventory
+  expect_equal(nrow(s3), nn+2)
+  budget <- replace.oldest(state=state2, n.max=Inf, time=10)$budget
+  expect_equal(budget, 0)
+
+})

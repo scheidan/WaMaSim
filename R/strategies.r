@@ -54,6 +54,27 @@ replace.pipe <- function(idx, inv, time){
 }
 
 
+## -----------
+## helper function replace all pipes at index 'idx'
+## if the budget allows for it
+replace.pipes <- function(state, idx){
+  inv <- state$inventory
+  budget <- state$budget
+  time <- state$time
+  
+  for(i in idx) {
+    if(budget < inv$replacement.value[i]){
+      break
+    } else {
+      budget <- budget - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)           # get new pipe
+    }
+  }
+  return(list(inventory=inv, budget=budget, time=time))
+}
+
+
+
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
@@ -77,25 +98,16 @@ do.nothing <- function(state){
 ##' @author Andreas Scheidegger
 replace.older.than <- function(state, max.age){
   inv <- state$inventory
-  budget <- state$budget
-  time <- state$time
   
   ## find the index of the pipes older than max.age that are *in use*
   is.active <- is.na(inv$time.end.of.service)
-  age <- time - inv$time.construction
+  age <- state$time - inv$time.construction
   idx <- which(age > max.age & is.active)
 
-  ## build new pipes and check for budget
-  for(i in idx) {
-    if(budget < inv$replacement.value[i]){
-      break
-    } else {
-      budget <- budget - inv$replacement.value[i] # pay for new pipe
-      inv <- replace.pipe(i, inv, time)       # get new pipe
-    }
-  }
+  ## build new pipes and update budget
+  state <- replace.pipes(state, idx)
   
-  return(list(inventory=inv, budget=budget, time=time)) 
+  return(state)
 }
 
 
@@ -110,24 +122,15 @@ replace.older.than <- function(state, max.age){
 ##' @author Andreas Scheidegger
 replace.more.failures.than <- function(state, max.failures){
   inv <- state$inventory
-  budget <- state$budget
-  time <- state$time
 
   ## find the index of the pipes older >max.age that are *in use*
   is.active <- is.na(inv$time.end.of.service)
   idx <- which(inv$n.failure > max.failures & is.active)
 
-  ## build new pipes and check for budget
-  for(i in idx) {
-    if(budget < inv$replacement.value[i]){
-      break
-    } else {
-      budget <- budget - inv$replacement.value[i] # pay for new pipe
-      inv <- replace.pipe(i, inv, time)       # get new pipe
-    }
-  }
-
-  return(list(inventory=inv, budget=budget, time=time))
+  ## build new pipes and update budget
+  state <- replace.pipes(state, idx)
+  
+  return(state)
 }
 
 
@@ -142,24 +145,15 @@ replace.more.failures.than <- function(state, max.failures){
 ##' @author Andreas Scheidegger
 replace.n.oldest <- function(state, n){
   inv <- state$inventory
-  budget <- state$budget
-  time <- state$time
   
   ## find the index of the n oldest pipes *in use*
   is.active <- is.na(inv$time.end.of.service)
   idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:(min(n, nrow(inv)))]
 
-  ## build new pipes and check for budget
-  for(i in idx) {
-    if(budget < inv$replacement.value[i]){
-      break
-    } else {
-      budget <- budget - inv$replacement.value[i] # pay for new pipe
-      inv <- replace.pipe(i, inv, time)       # get new pipe
-    }
-  }
+  ## build new pipes and update budget
+  state <- replace.pipes(state, idx)
   
-  return(list(inventory=inv, budget=budget))
+  return(state)
 }
 
 
@@ -173,23 +167,14 @@ replace.n.oldest <- function(state, n){
 ##' @author Andreas Scheidegger
 replace.n.random <- function(state, n){
   inv <- state$inventory
-  budget <- state$budget
-  time <- state$time
   
   ## sample randomly the index of pipes that are *in use*
   is.active <- is.na(inv$time.end.of.service)
   idx <- sample(which(is.active), min(nrow(inv), n))
 
-  ## build new pipes and check for budget
-  for(i in idx) {
-    if(budget < inv$replacement.value[i]){
-      break
-    } else {
-      budget <- budget - inv$replacement.value[i] # pay for new pipe
-      inv <- replace.pipe(i, inv, time)       # get new pipe
-    }
-  }
+  ## build new pipes and update budget
+  state <- replace.pipes(state, idx)
   
-  return(list(inventory=inv, budget=budget))
+  return(state)
 }
 

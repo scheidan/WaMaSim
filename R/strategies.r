@@ -7,43 +7,26 @@
 ## -------------------------------------------------------
 
 
-## 1.1 No rehabilitation
-## This is the simplest strategy and very often
-## applied in practice. It means that broken pipes will be repaired,
-## but no pipes replaced with a new one (rehabilitated).
+## [x] 1.1 No rehabilitation
 
-## 1.2 Replacement age
-## As soon as a pipe reaches a specific age, it
-## will be replaced with a new one. Typically, the technical
-## guidelines give an estimated lifespan of a water main, e.g. 50
-## years. This then will be the replacement age.
+## [x] 1.2 Replacement age
 
-## 1.3 Number of breaks
-## Often pipes are replaced after a number of
-## breaks. This reflects the often observed fact that the time between
-## the breaks of a single pipe becomes shorter with increasing number
-## of breaks.
+## [x] 1.3 Number of failures
 
-## 1.4 Fixed budget or fixed capacity
-## Often the utility has a fixed
-## annual budget to operate with. Either in terms of money or then in
-## terms of manpower that can be mustered to manage all the repair and
-## rehabilitation.
+## [x] 1.4 Fixed budget or fixed capacity -> every strategy has a budget
 
-## 1.5 Risk based prioritisation
-## This is a very modern approach, where
-## pipes with a high potential for damage will be given priority. This
-## is usually combined with another strategy measure, e.g. replacement
-## age. In this exercise the damage potential is proportional to the
-## pipe diameter.
+## [ ] 1.5 Risk based prioritisation -> needs first risk calcualtion
 
-## 1.6 Combination of different factors
-## A typical combination is a
-## fixed budget with a replacement age, where the remaining budget
-## after all repairs are used to rehabilitate the oldest pipes.
+## [x]     Random replacement
+
+## [x] 1.6 Combination of different factors
+
+
+
 
 ## -----------
-## replace pipe at 'idx' in the inventory with a new one
+## helper function replace pipe at 'idx'
+## in the inventory with a new one
 replace.pipe <- function(idx, inv, time){
 
   ## get new ID
@@ -53,10 +36,10 @@ replace.pipe <- function(idx, inv, time){
     id <- 1
   }
 
-                                        # retire old pipe
+  ## retire old pipe
   inv$time.end.of.service[idx] <- time  
 
-                                        # add new pipe
+  ## add new pipe
   new.pipe <- data.frame(ID=id,
                          time.construction=time,
                          replacement.value=inv$replacement.value[idx],
@@ -82,23 +65,91 @@ do.nothing <- function(state){
   return(state)
 }
 
+
+
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
-##' @title rehabilitation strategy: replace the oldest pipes
+##' @title rehabilitation strategy: replace pipes over max.age
+##' @param state a state list
+##' @param max.age pipes older than max.age are replaced
+##' @return a state list
+##' @author Andreas Scheidegger
+replace.older.than <- function(state, max.age){
+  inv <- state$inventory
+  budget <- state$budget
+  time <- state$time
+  
+  ## find the index of the pipes older than max.age that are *in use*
+  is.active <- is.na(inv$time.end.of.service)
+  age <- time - inv$time.construction
+  idx <- which(age > max.age & is.active)
+
+  ## build new pipes and check for budget
+  for(i in idx) {
+    if(budget < inv$replacement.value[i]){
+      break
+    } else {
+      budget <- budget - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)       # get new pipe
+    }
+  }
+  
+  return(list(inventory=inv, budget=budget, time=time)) 
+}
+
+
+
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title rehabilitation strategy: replace pipes with too many failures
+##' @param state a state list
+##' @param max.failures maximal allowed number of failures
+##' @return a state list
+##' @author Andreas Scheidegger
+replace.more.failures.than <- function(state, max.failures){
+  inv <- state$inventory
+  budget <- state$budget
+  time <- state$time
+
+  ## find the index of the pipes older >max.age that are *in use*
+  is.active <- is.na(inv$time.end.of.service)
+  idx <- which(inv$n.failure > max.failures & is.active)
+
+  ## build new pipes and check for budget
+  for(i in idx) {
+    if(budget < inv$replacement.value[i]){
+      break
+    } else {
+      budget <- budget - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)       # get new pipe
+    }
+  }
+
+  return(list(inventory=inv, budget=budget, time=time))
+}
+
+
+
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title rehabilitation strategy: replace the n oldest pipes
 ##' @param state 
 ##' @param n.max maximal number of pipes to replace
 ##' @return a state list
 ##' @author Andreas Scheidegger
-replace.oldest <- function(state, n.max, time){
-  inv = state$inventory
-  budget = state$budget
+replace.n.oldest <- function(state, n){
+  inv <- state$inventory
+  budget <- state$budget
+  time <- state$time
   
   ## find the index of the n oldest pipes *in use*
   is.active <- is.na(inv$time.end.of.service)
-  idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:(min(n.max, nrow(inv)))]
+  idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:(min(n, nrow(inv)))]
 
-  ## build new pipes
+  ## build new pipes and check for budget
   for(i in idx) {
     if(budget < inv$replacement.value[i]){
       break
@@ -110,3 +161,35 @@ replace.oldest <- function(state, n.max, time){
   
   return(list(inventory=inv, budget=budget))
 }
+
+
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title rehabilitation strategy: replace the n randomly selected pipes
+##' @param state 
+##' @param n maximal number of pipes to replace
+##' @return a state list
+##' @author Andreas Scheidegger
+replace.n.random <- function(state, n){
+  inv <- state$inventory
+  budget <- state$budget
+  time <- state$time
+  
+  ## sample randomly the index of pipes that are *in use*
+  is.active <- is.na(inv$time.end.of.service)
+  idx <- sample(which(is.active), min(nrow(inv), n))
+
+  ## build new pipes and check for budget
+  for(i in idx) {
+    if(budget < inv$replacement.value[i]){
+      break
+    } else {
+      budget <- budget - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)       # get new pipe
+    }
+  }
+  
+  return(list(inventory=inv, budget=budget))
+}
+

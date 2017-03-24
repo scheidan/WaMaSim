@@ -48,21 +48,75 @@ test_that("replace pipe", {
 })
 
 
+nn <- nrow(inv.failed)
+state1 <- list(inventory=inv.failed, budget=30000, time=10)
+state2 <- list(inventory=inv.failed, budget=2000, time=10)
+
+test_that("replace older than", {
+
+  s1 <- replace.older.than(state=state1, max.age=20)$inventory
+  expect_equal(nrow(s1), nn)
+  s2 <- replace.older.than(state=state1, max.age=5)$inventory
+  expect_equal(nrow(s2), nn+nn)
+  s3 <- replace.older.than(state=state2, max.age=5)$inventory
+  expect_equal(nrow(s3), nn+2)
+  budget <- replace.older.than(state=state2, max.age=5)$budget
+  expect_equal(budget, 0)
+
+})
+
+
 
 nn <- nrow(inv.failed)
-state1 <- list(inventory=inv.failed, budget=30000)
-state2 <- list(inventory=inv.failed, budget=2000)
+state1 <- list(inventory=inv.failed, budget=30000, time=10)
+state2 <- list(inventory=inv.failed, budget=2000, time=10)
 
+test_that("replace.more.failures.than", {
+
+  s1 <- replace.more.failures.than(state=state1, max.failures=2)$inventory
+  expect_equal(nrow(s1), nn)
+  s2 <- replace.more.failures.than(state=state1, max.failures=0)$inventory
+  expect_equal(nrow(s2), nn+nn)
+  s3 <- replace.more.failures.than(state=state2, max.failures=0)$inventory
+  expect_equal(nrow(s3), nn+2)
+  budget <- replace.more.failures.than(state=state2, max.failures=0)$budget
+  expect_equal(budget, 0)
+
+})
+
+
+
+nn <- nrow(inv.failed)
+state1 <- list(inventory=inv.failed, budget=30000, time=10)
+state2 <- list(inventory=inv.failed, budget=2000, time=10)
 
 test_that("replace oldest", {
 
-  s1 <- replace.oldest(state=state1, n.max=Inf, time=10)$inventory
+  s1 <- replace.n.oldest(state=state1, n=Inf)$inventory
   expect_equal(nrow(s1), nn+nn)
-  s2 <- replace.oldest(state=state1, n.max=3, time=10)$inventory
+  s2 <- replace.n.oldest(state=state1, n=3)$inventory
   expect_equal(nrow(s2), nn+3)
-  s3 <- replace.oldest(state=state2, n.max=Inf, time=10)$inventory
+  s3 <- replace.n.oldest(state=state2, n=Inf)$inventory
   expect_equal(nrow(s3), nn+2)
-  budget <- replace.oldest(state=state2, n.max=Inf, time=10)$budget
+  budget <- replace.n.oldest(state=state2, n=Inf)$budget
+  expect_equal(budget, 0)
+
+})
+
+
+nn <- nrow(inv.failed)
+state1 <- list(inventory=inv.failed, budget=30000, time=10)
+state2 <- list(inventory=inv.failed, budget=2000, time=10)
+
+test_that("replace randomly", {
+
+  s1 <- replace.n.random(state=state1, n=Inf)$inventory
+  expect_equal(nrow(s1), nn+nn)
+  s2 <- replace.n.random(state=state1, n=3)$inventory
+  expect_equal(nrow(s2), nn+3)
+  s3 <- replace.n.random(state=state2, n=Inf)$inventory
+  expect_equal(nrow(s3), nn+2)
+  budget <- replace.n.random(state=state2, n=Inf)$budget
   expect_equal(budget, 0)
 
 })

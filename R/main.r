@@ -7,7 +7,14 @@
 ## -------------------------------------------------------
 
 
-WaMaSim <- function(t.sim, expansion, rehabilitation, initial.budget, initial.inventory=NULL) {
+simulate <- function(t.sim, expansion, rehabilitation, initial.budget, initial.inventory=NULL) {
+
+  for(time in 1:t.sim){
+
+
+  }
 
   return(inventorylist)
 }
+
+

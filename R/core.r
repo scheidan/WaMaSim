@@ -31,14 +31,52 @@ make.empty.inventory <- function() {
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
+##' @title Model expansion of the network
+##' @param state a state object
+##' @param n.new number of new pipes
+##' @param replacement.value replacement.value of new pipes
+##' @return the expanded inventory
+##' @author Andreas Scheidegger
+expand <- function(state, n.new, replacement.value=1000){
+
+  inventory <- state$inventory
+  time <- state$time
+  
+  if(nrow(inventory)>0){
+    idmin <- max(inventory$ID) + 1
+  } else {
+    idmin <- 1
+  }
+
+  inventory.add <- data.frame(ID=idmin:(idmin+n.new-1),
+                              time.construction=time,
+                              replacement.value=replacement.value,
+                              damage.potential=NA,
+                              n.failure=0,
+                              time.last.failure=NA,
+                              time.end.of.service=NA)
+  
+  inventory <- rbind(inventory, inventory.add)
+  class(inventory) <- c("data.frame", "inventory")
+
+  return(list(inventory=inventory, budget=budget, time=time))
+  
+}
+
+
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
 ##' @title Model failures of the network
-##' @param inventory inventory object
+##' @param state a state object
 ##' @param failure.rate function returning the failure rate (age, time.last.failure, n.failure)
-##' @param time point in time
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
-fail <- function(inventory, failure.rate, time){
+fail <- function(state, failure.rate){
 
+  inventory <- state$inventory
+  time <- state$time
+  
   for(i in 1:nrow(inventory)){
     if(is.na(inventory$time.end.of.service[i])){
       
@@ -53,37 +91,5 @@ fail <- function(inventory, failure.rate, time){
     } 
   }
 
-  return(inventory)
-}
-
-
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @title Model expansion of the network
-##' @param inventory inventory object
-##' @param n.new number of new pipes
-##' @param replacement.value replacement.value of new pipes
-##' @param time point in time of expansion
-##' @return the expanded inventory
-##' @author Andreas Scheidegger
-expand <- function(inventory, n.new, time, replacement.value=1000){
-
-  if(nrow(inventory)>0){
-    id.min <- max(inventory$ID) + 1
-  } else {
-    idmin <- 1
-  }
-
-  inventory.add <- data.frame(ID=idmin:(idmin+n.new-1),
-                              time.construction=time,
-                              replacement.value=replacement.value,
-                              damage.potential=NA,
-                              n.failure=0,
-                              time.last.failure=NA,
-                              time.end.of.service=NA)
-  
-  inventory <- rbind(inventory, inventory.add)
-  class(inventory) <- c("data.frame", "inventory") 
-  return(inventory)
+  return(list(inventory=inventory, budget=budget, time=time))
 }

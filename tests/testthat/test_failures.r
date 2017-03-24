@@ -16,26 +16,28 @@ test_that("empty inventory is correct", {
   expect_true( all(c("data.frame", "inventory") %in% class(empty.inv)) )
 })
 
+state <- list(inventory=empty.inv, budget=30000, time=1)
 
-inv.exp <- expand(empty.inv, 10, 1)
+state.exp <- expand(state, 10)
 test_that("expanded inventory is correct", {
-  expect_true( all(c("data.frame", "inventory") %in% class(inv.exp)) )
-  expect_equal(nrow(inv.exp), 10)
+  expect_true( all(c("data.frame", "inventory") %in% class(state.exp$inventory)) )
+  expect_equal(nrow(state.exp$inventory), 10)
 })
 
 
 f.rate.test <- function(age, time.last.failure, n.failure) 1 # fails always
 
-inv.failed <- fail(inv.exp, f.rate.test, 2)
+state.failed <- fail(state.exp, f.rate.test)
 test_that("failed inventory is correct", {
-  expect_true( all(c("data.frame", "inventory") %in% class(inv.failed)) )
-  expect_false( any(is.na(inv.failed$time.last.failure)) )
-  expect_true( all(inv.failed$n.failure > 0) )
+  expect_true( all(c("data.frame", "inventory") %in% class(state.failed$inventory)) )
+  expect_false( any(is.na(state.failed$inventory$time.last.failure)) )
+  expect_true( all(state.failed$inventory$n.failure > 0) )
 })
 
 
 context("strategies")
 
+inv.failed <- state.failed$inventory
 inv.replaced <- replace.pipe(1, inv.failed, 3)
 nn <- nrow(inv.replaced)
 

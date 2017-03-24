@@ -53,24 +53,28 @@ expand <- function(state, n.new, replacement.value=1000,
     idmin <- 1
   }
 
-  ## check budget
-  n.new <- min(floor(state$budget / replacement.value), n.new)
   
-  inventory.add <- data.frame(ID=idmin:(idmin+n.new-1),
-                              time.construction=time,
-                              replacement.value=replacement.value,
-                              damage.potential=damage.potential,
-                              n.failure=0,
-                              time.last.failure=NA,
-                              time.end.of.service=NA)
-  
-  inventory <- rbind(inventory, inventory.add)
-  class(inventory) <- c("data.frame", "inventory")
-  
-  ## costs
+  ## check budget 
   if(!separat.budget){
+    n.new <- min(floor(state$budget / replacement.value), n.new)
     budget <- budget - n.new*replacement.value
   }
+
+  
+  if(n.new>0){
+    inventory.add <- data.frame(ID=idmin:(idmin+n.new-1),
+                                time.construction=time,
+                                replacement.value=replacement.value,
+                                damage.potential=damage.potential,
+                                n.failure=0,
+                                time.last.failure=NA,
+                                time.end.of.service=NA)
+  
+    inventory <- rbind(inventory, inventory.add)
+    class(inventory) <- c("data.frame", "inventory")
+  }
+  
+
 
   return(list(inventory=inventory, budget=budget, time=time))
   
@@ -91,7 +95,7 @@ fail <- function(state, failure.rate){
   time <- state$time
   budget <- state$budget
   
-  for(i in 1:nrow(inventory)){
+  for(i in seq_len(nrow(inventory))){
     if(is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],

@@ -2,14 +2,12 @@
 % Please edit documentation in R/strategies.r
 \name{do.nothing}
 \alias{do.nothing}
-\title{Dummy function for no rehabilitation}
+\title{rehabilitation strategy: no rehabilitation}
 \usage{
 do.nothing(state)
 }
 \arguments{
-\item{inventory}{}
-
-\item{budget}{}
+\item{state}{}
 }
 \value{
 a state list

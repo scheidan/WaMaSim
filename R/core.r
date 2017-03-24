@@ -63,10 +63,11 @@ fail <- function(inventory, failure.rate, time){
 ##' @title Model expansion of the network
 ##' @param inventory inventory object
 ##' @param n.new number of new pipes
+##' @param replacement.value replacement.value of new pipes
 ##' @param time point in time of expansion
 ##' @return the expanded inventory
 ##' @author Andreas Scheidegger
-expand <- function(inventory, n.new, time){
+expand <- function(inventory, n.new, time, replacement.value=1000){
 
   if(nrow(inventory)>0){
     id.min <- max(inventory$ID) + 1

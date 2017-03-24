@@ -42,20 +42,70 @@
 ## fixed budget with a replacement age, where the remaining budget
 ## after all repairs are used to rehabilitate the oldest pipes.
 
+## -----------
+## replace pipe at 'idx' in the inventory with a new one
+replace.pipe <- function(idx, inv, time)
+{
+
+  if(nrow(inventory)>0){
+    id <- max(inventory$ID) + 1
+  } else {
+    id <- 1
+  }
+
+  inv$time.end.of.service[idx] <- time  # retire old pipe
+  
+  new.pipe <- data.frame(ID=id,
+                         time.construction=time,
+                         replacement.value=inv$replacement.value[idx],
+                         damage.potential=inv$damage.potential[idx],
+                         n.failure=0,
+                         time.last.failure=NA,
+                         time.end.of.service=NA)
+
+  inv <- rbind(inv, new.pipe)
+  class(inv) <- c("data.frame", "inventory")
+  inv
+}
 
 
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
-##' @title Dummy function for no rehabilitation
-##' @param inventory 
-##' @param budget 
+##' @title rehabilitation strategy: no rehabilitation
+##' @param state 
 ##' @return a state list
 ##' @author Andreas Scheidegger
 do.nothing <- function(state){
-
-  inventory = state$inventory
-  budget = sate$inventory
-
   return(state)
+}
+
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title rehabilitation strategy: replace the oldest pipes
+##' @param state 
+##' @param n.max maximal number of pipes to replace
+##' @return a state list
+##' @author Andreas Scheidegger
+replace.oldest <- function(state, n.max, time){
+  inv = state$inventory
+  budget = state$inventory
+  
+  ## find the index of the n oldest pipes *in use*
+  is.active <- is.na(inv$time.end.of.service)
+  idx <- order(inv$time.construction + as.numeric(!is.active)*1E10)[1:n]
+
+  ## build new pipes
+  for(i in idx) {
+    if(budget < inv$replacement.value[i]){
+      break
+    } else {
+      budget <- budget - inv$replacement.value[i]
+      
+      inv$time.end.of.service[i] <- time  # retire old pipe
+      inv <- replace.pipe(i, inv)       # 
+    }
+  }
+  return(list(inventory=inv, budget=budget))
 }

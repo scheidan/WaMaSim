@@ -4,7 +4,7 @@
 \alias{expand}
 \title{Model expansion of the network}
 \usage{
-expand(inventory, n.new, time)
+expand(inventory, n.new, time, replacement.value = 1000)
 }
 \arguments{
 \item{inventory}{inventory object}
@@ -12,6 +12,8 @@ expand(inventory, n.new, time)
 \item{n.new}{number of new pipes}
 
 \item{time}{point in time of expansion}
+
+\item{replacement.value}{replacement.value of new pipes}
 }
 \value{
 the expanded inventory

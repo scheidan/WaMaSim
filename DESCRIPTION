@@ -8,4 +8,5 @@ Maintainer:  <andreas.scheidegger@eawag.ch>
 Description: More about what it does (maybe more than one line)
 License: GPL3
 RoxygenNote: 6.0.1
+Depends: magrittr (>= 1.5) 
 Suggests: testthat

@@ -6,13 +6,38 @@
 ## andreas.scheidegger@eawag.ch
 ## -------------------------------------------------------
 
+##' WaMaSim is a package to simulate the effect of different
+##' rehabiliation strategies for water distribution systems.
+##' @name WaMaSim
+##' @author Andreas Scheidegger
+##' @docType package
+
+
+
 library(magrittr)
 
-
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title Function to run a simulation
+##' @param t.sim number of years to simulate
+##' @param expansion a scalar the descriving the number of pipes added
+##' annualy or a evctor of length \code{t.sim}
+##' @param rehabilitation a (combination of) rehabiltation strategies functions
+##' @param failure.rate a function screibing the failure rate
+##' @param income.per.pipe anual income per pipe
+##' @param initial.budget initial budget
+##' @param initial.inventory if \code{NULL} the simulation starts without pipes,
+##' or an integer can be given specifying the numbe rof initial pipes,
+##' or an initial inventory can be specified.
+##' @return A list of length \code{t.sim+1} conting all model states.
+##' @author Andreas Scheidegger
+##' @export
 simulate <- function(t.sim,
                      expansion,   
                      rehabilitation,
                      failure.rate,
+                     income.per.pipe,
                      initial.budget=Inf,
                      initial.inventory=NULL) {
 
@@ -56,7 +81,7 @@ simulate <- function(t.sim,
                     separat.budget=TRUE) 
     
     ## 2) collect fees
-    state$budget <- state$budget + 4000
+    state$budget <- state$budget + income.per.pipe*sum(state$inventory$in.service)
     
     ## 3) simulate failures
     state <- fail(state, failure.rate)

@@ -20,7 +20,8 @@ make.empty.inventory <- function() {
                           damage.potential=double(),
                           n.failure=integer(),
                           time.last.failure=double(),
-                          time.end.of.service=double())
+                          time.end.of.service=double(),
+                          in.service=logical())
 
   class(inventory) <- c("data.frame", "inventory")
   return(inventory) 
@@ -33,10 +34,10 @@ make.empty.inventory <- function() {
 ##' .. content for \details{} ..
 ##' @title Model expansion of the network
 ##' @param state a state object
-##' @param n.new number of new pipes
-##' @param replacement.value replacement.value of new pipes
+##' @param \code{n.new} number of new pipes
+##' @param replacement.value replacement value of new pipes
 ##' @param damage.potential cost in case of failure
-##' @param separat.budget Boolan, if TRUE expansion cost are
+##' @param separat.budget Boolan, if \code{TRUE} expansion cost are
 ##' not counted on the normal budget
 ##' @return the expanded inventory
 ##' @author Andreas Scheidegger
@@ -68,7 +69,8 @@ expand <- function(state, n.new, replacement.value=1000,
                                 damage.potential=damage.potential,
                                 n.failure=0,
                                 time.last.failure=NA,
-                                time.end.of.service=NA)
+                                time.end.of.service=NA,
+                                in.service=TRUE)
   
     inventory <- rbind(inventory, inventory.add)
     class(inventory) <- c("data.frame", "inventory")
@@ -86,7 +88,8 @@ expand <- function(state, n.new, replacement.value=1000,
 ##' .. content for \details{} ..
 ##' @title Model failures of the network
 ##' @param state a state object
-##' @param failure.rate function returning the failure rate (age, time.last.failure, n.failure)
+##' @param failure.rate function returning the failure rate.
+##' Must take \code{age, time.last.failure, n.failure} as arguments.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
 fail <- function(state, failure.rate){

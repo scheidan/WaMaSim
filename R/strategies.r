@@ -15,7 +15,8 @@
 
 ## [x] 1.4 Fixed budget or fixed capacity -> every strategy has a budget
 
-## [ ] 1.5 Risk based prioritisation -> needs first risk calcualtion
+## [ ] 1.5 Risk based prioritisation -> needs risk calcualtion first
+##  replace.n.highest.risk(n)
 
 ## [x]     Random replacement
 
@@ -46,7 +47,8 @@ replace.pipe <- function(idx, inv, time){
                          damage.potential=inv$damage.potential[idx],
                          n.failure=0,
                          time.last.failure=NA,
-                         time.end.of.service=NA)
+                         time.end.of.service=NA,
+                         in.service=TRUE)
 
   inv <- rbind(inv, new.pipe)
   class(inv) <- c("data.frame", "inventory")
@@ -82,6 +84,7 @@ replace.pipes <- function(state, idx){
 ##' @param state 
 ##' @return a state list
 ##' @author Andreas Scheidegger
+##' @export
 do.nothing <- function(state){
   return(state)
 }
@@ -91,11 +94,12 @@ do.nothing <- function(state){
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
-##' @title rehabilitation strategy: replace pipes over max.age
+##' @title rehabilitation strategy: replace pipes over \code{max.age}
 ##' @param state a state list
 ##' @param max.age pipes older than max.age are replaced
 ##' @return a state list
 ##' @author Andreas Scheidegger
+##' @export
 replace.older.than <- function(state, max.age){
   inv <- state$inventory
   
@@ -120,6 +124,7 @@ replace.older.than <- function(state, max.age){
 ##' @param max.failures maximal allowed number of failures
 ##' @return a state list
 ##' @author Andreas Scheidegger
+##' @export
 replace.more.failures.than <- function(state, max.failures){
   inv <- state$inventory
 
@@ -143,6 +148,7 @@ replace.more.failures.than <- function(state, max.failures){
 ##' @param n.max maximal number of pipes to replace
 ##' @return a state list
 ##' @author Andreas Scheidegger
+##' @export
 replace.n.oldest <- function(state, n){
   inv <- state$inventory
   
@@ -160,11 +166,12 @@ replace.n.oldest <- function(state, n){
 ##' .. content for \description{} (no empty lines) ..
 ##'
 ##' .. content for \details{} ..
-##' @title rehabilitation strategy: replace the n randomly selected pipes
+##' @title rehabilitation strategy: replace \code{n} randomly selected pipes
 ##' @param state 
 ##' @param n maximal number of pipes to replace
 ##' @return a state list
 ##' @author Andreas Scheidegger
+##' @export
 replace.n.random <- function(state, n){
   inv <- state$inventory
   

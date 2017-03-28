@@ -12,6 +12,7 @@ Computer Laboratory at ETH Zurich, Switzerland.
 1. Install [R](https://cloud.r-project.org/) and [R-Studio](https://www.rstudio.com/products/RStudio/) or any other editor.
 
 2. Install `devtools` (type in the R command line)
+```
 install.packages("devtools")
 ```
 
@@ -67,8 +68,8 @@ See the package help for more information.
 
 ## Package development
 
-Install the packages `devtools`, `testthat`, and `roxygen2`.
-Workflow to build and test this package:
+The packages `devtools`, `testthat`, and `roxygen2` are required.
+To build and test this package use the follwing workflow:
 ```R
 library(devtools)
 
@@ -86,6 +87,6 @@ document(package.path)
 ## run R CMD check
 check(package.path)
 
-## build_win(package.path)    # optional, test build on a online windows instance
+# build_win(package.path)     # optional, test build on a online windows instance
 
 ```

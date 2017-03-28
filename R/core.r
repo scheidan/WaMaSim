@@ -6,12 +6,8 @@
 ## andreas.scheidegger@eawag.ch
 ## -------------------------------------------------------
 
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @title Initialize empty inventory
-##' @return an inventory object
-##' @author Andreas Scheidegger
+
+## Initialize empty inventory
 make.empty.inventory <- function() {
 
   inventory <- data.frame(ID=integer(),
@@ -27,10 +23,9 @@ make.empty.inventory <- function() {
   return(inventory) 
 }
 
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @title Sample a diameter of a new pipe. Based on data from ?? (Lisa Scholten)
+
+##' The diameter distribution is based on a real data set from ???
+##' @title Sample a diameter of a new pipe.
 ##' @param n number of samples
 ##' @return a vector of diameters
 ##' @author Andreas Scheidegger
@@ -44,24 +39,22 @@ sample.diameter <- function(n=1){
 }
 
 
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @title Calculate replacement value based on eq(1) of
-##' "The water Network Management Chalange, Maurer (2017)" 
-##' @param diameter diameter of the pipe in millimeter
+##' Based on eq(1) of "The water Network Management Chalange, Maurer (2017)",
+##' assuming a pipe length of 100m
+##' 
+##' @title Calculate replacement value  
+##' @param diameter diameter of the pipe [mm]
 ##' @return replacement value in CHF
 ##' @author Andreas Scheidegger
 replacement.value <- function(diameter){
   100*(1.9*diameter + 540)              
 }
 
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
+##' Expand the network with additional pipes. The diameter of these pipes is sampled.
+##' 
 ##' @title Model expansion of the network
 ##' @param state a state object
-##' @param \code{n.new} number of new pipes
+##' @param n.new \code{n.new} number of new pipes
 ##' @param separat.budget Boolan, if \code{TRUE} expansion cost are
 ##' not counted on the normal budget
 ##' @return the expanded inventory
@@ -111,22 +104,22 @@ expand <- function(state, n.new, separat.budget=FALSE){
 }
 
 
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
+##' Calulate the costs caused by a failure according to sectio 5.1 in
+##' "The Water Network Management Challenge", Max Maurer 2017.
+##' 
 ##' @title Calculate (random) costs of a failure
 ##' @param diameter diameter [mm]
 ##' @param mean boolan. Should the expected cost be returned? Random otherwise.
-##' @return if \code(mean=FALSE), the cost of failure [CHF] are sampled
-##' randomly. If \code(mean=TRUE), the expected average costs are returned.
+##' @return if \code{mean=FALSE}, the cost of failure [CHF] are sampled
+##' randomly. If \code{mean=TRUE}, the expected average costs are returned.
 ##' @author Andreas Scheidegger
 failure.cost <- function(diameter, mean=FALSE){
   n <- length(diameter)
   
   mean.fix <- 6500
   sd.fix <- 1500
-  mean.damage <- 7+sqrt(diameter/7)
-  sd.damage <- sqrt(diameter/7)
+  mean.damage <- 7+sqrt(diameter/200)
+  sd.damage <- sqrt(diameter/200)
 
   ## reparamerisation for log-normal 
   meanlog <- log(mean.damage) - 0.5*log(1 + (sd.damage/mean.damage)^2)
@@ -142,13 +135,13 @@ failure.cost <- function(diameter, mean=FALSE){
 
 
 
-##' .. content for \description{} (no empty lines) ..
+##' Lets pipe randomly fail. If a failure happened, the damage costs are
+##' calculated and subtracted from the budget. Note, that this may result in a negative budget.
 ##'
-##' .. content for \details{} ..
 ##' @title Model failures of the network
 ##' @param state a state object
 ##' @param failure.rate function returning the failure rate.
-##' Must take \code{age, time.last.failure, n.failure} as arguments.
+##' \code{failure.rate} must take \code{age, time.last.failure, n.failure} as arguments.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
 fail <- function(state, failure.rate){

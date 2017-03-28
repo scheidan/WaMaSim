@@ -80,7 +80,6 @@ do.nothing <- function(state){
 ##' Strategy to replace pipes over a given age. Pipes are only
 ##' replaced if the budget remains positive.
 ##'
-##' .. content for \details{} ..
 ##' @title Rehabilitation strategy: replace pipes over \code{max.age}
 ##' @param state a state list
 ##' @param max.age pipes older than max.age are replaced
@@ -156,7 +155,7 @@ replace.more.failures.than <- function(state, max.failures){
 ##'
 ##' @title Rehabilitation strategy: replace the n oldest pipes
 ##' @param state a state list
-##' @param n.max maximal number of pipes to replace
+##' @param n maximal number of pipes to replace
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##' 
@@ -230,7 +229,7 @@ replace.n.random <- function(state, n){
 ##' @title Rehabilitation strategy: replace the \code{n} pipes with the highest risk
 ##' @param state a state list
 ##' @param n maximal number of pipes to replace
-##' @param failure.rate failur rate function. Typically the same as passed to \code{\link(simulate)}.
+##' @param failure.rate failur rate function. Typically the same as passed to \code{\link{simulate}}.
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -254,9 +253,9 @@ replace.n.highest.risk <- function(state, n, failure.rate){
   risk <- rep(NA, nrow(inv))
   for(i in which(inv$in.service)){
     
-    Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
-                              inventory$time.last.failure[i],
-                              inventory$n.failure[i])
+    Prob.fail <- failure.rate(age=state$time-inv$time.construction[i],
+                              inv$time.last.failure[i],
+                              inv$n.failure[i])
     
     expected.failure.cost <- failure.cost(inv$diameter[i], mean=TRUE)
     

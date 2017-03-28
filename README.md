@@ -1,24 +1,91 @@
-Water Main Management Simulator
-===============================
+WaMaSim - Water Management Simulator
+====================================
+
+_WaMaSim_ is an R package to simulate the effect of different
+rehabiliation strategies for water distribution systems. It is an
+education tool used for the Water Infrastructure Experimental and
+Computer Laboratory at ETH Zurich, Switzerland.
 
 
 ## Installation
 
-1. Install R and R Studio or any other editor.
+1. Install [R](https://cloud.r-project.org/) and [R-Studio](https://www.rstudio.com/products/RStudio/) or any other editor.
 
-2. Install `devtools`
-```R
+2. Install `devtools` (type in the R command line)
 install.packages("devtools")
 ```
 
-3. Install WaMaSim
+3. Install WaMaSim (type in the R command line)
 ```
 library(devtools)
-
-github.install("WaMaSim")
+install_github("scheidan/WaMaSim")
 ```
 
 
 ## Usage
 
-To be documented
+This is a minimal example how you can run the simulation:
+```R
+## 1) Define failure rate
+f.rate <- function(age, time.last.failure, n.failure) {
+  if(n.failure==0){
+    return(1/30)
+  } else {
+    return(1/10)
+  }
+}
+
+
+## 2) Define a complicated (and probably useless) rehabilitation strategy
+mystrategy <- . %>%
+  replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+  replace.more.failures.than(max.failures=5) %>%
+  replace.older.than(max.age=100) %>%
+  replace.n.oldest(n=3) %>%
+  replace.n.random(n=4)
+## This means: every year (if we have enough budget!), replace first the 2 pipes
+## with the highest risk, then all pipes with more than 5 failures,
+## then all pipes older then 100 years, then the 3 oldest pipes remaining, and
+## finally replace 4 randomly selected pipes.
+
+
+## 3) Run the simulation
+result <- simulate(t.sim=100,                  # run it for 100 years
+                   expansion=0,                # do not expand the system
+                   rehabilitation=mystrategy,  # use the strategy defined above
+                   failure.rate=f.rate,        # use the failure rate defined above
+                   income = 1e6,               # the annual income
+                   initial.budget=30e6,
+                   initial.inventory=50)       # start the simulation with 50 new pipes
+
+str(result)                                    # a list of model states
+```
+
+See the package help for more information.
+
+
+
+## Package development
+
+Install the packages `devtools`, `testthat`, and `roxygen2`.
+Workflow to build and test this package:
+```R
+library(devtools)
+
+package.path = "WaMaSim/"     # path must point to the folder containing the WaMaSim files
+
+## simulate a new package installation
+load_all(package.path)
+
+## run tests
+test(package.path)            # this runs the tests in the `test` folder of the package
+
+## build documentation (uses Roxygen2)
+document(package.path)
+
+## run R CMD check
+check(package.path)
+
+## build_win(package.path)    # optional, test build on a online windows instance
+
+```

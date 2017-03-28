@@ -25,7 +25,7 @@ library(magrittr)
 ##' annualy or a evctor of length \code{t.sim}
 ##' @param rehabilitation a (combination of) rehabiltation strategies functions
 ##' @param failure.rate a function screibing the failure rate
-##' @param income.per.pipe anual income per pipe
+##' @param annual.income anual income per pipe
 ##' @param initial.budget initial budget
 ##' @param initial.inventory if \code{NULL} the simulation starts without pipes,
 ##' or an integer can be given specifying the numbe rof initial pipes,
@@ -33,11 +33,11 @@ library(magrittr)
 ##' @return A list of length \code{t.sim+1} conting all model states.
 ##' @author Andreas Scheidegger
 ##' @export
-simulate <- function(t.sim,
+simulate <- function(t.sim, 
                      expansion,   
                      rehabilitation,
                      failure.rate,
-                     income.per.pipe,
+                     annual.income,
                      initial.budget=Inf,
                      initial.inventory=NULL) {
 
@@ -59,7 +59,6 @@ simulate <- function(t.sim,
 
   if(is.numeric(initial.inventory)){
     state <- expand(state, initial.inventory,
-                    replacement.value=1000,
                     separat.budget=TRUE)
   }
 
@@ -71,17 +70,19 @@ simulate <- function(t.sim,
   
   ## loop over time
   for(t in 1:t.sim){
-    print(paste("Simulate step", t))
+    if(mod(t, 10)==0){
+      print(paste("Simulate year", t))
+    }
     
     ## 0) update time
     state$time = state$time + 1
     
     ## 1) expand system
-    state <- expand(state, expansion[t], replacement.value=1000,
+    state <- expand(state, expansion[t],
                     separat.budget=TRUE) 
     
     ## 2) collect fees
-    state$budget <- state$budget + income.per.pipe*sum(state$inventory$in.service)
+    state$budget <- state$budget + annual.income*sum(state$inventory$in.service)
     
     ## 3) simulate failures
     state <- fail(state, failure.rate)

@@ -44,7 +44,7 @@ replace.pipe <- function(idx, inv, time){
   new.pipe <- data.frame(ID=id,
                          time.construction=time,
                          replacement.value=inv$replacement.value[idx],
-                         damage.potential=inv$damage.potential[idx],
+                         diameter=inv$diameter[idx],
                          n.failure=0,
                          time.last.failure=NA,
                          time.end.of.service=NA,

@@ -16,7 +16,7 @@ test_that("empty inventory is correct", {
   expect_true( all(c("data.frame", "inventory") %in% class(empty.inv)) )
 })
 
-state <- list(inventory=empty.inv, budget=30000, time=1)
+state <- list(inventory=empty.inv, budget=3000000, time=1)
 
 state.exp <- expand(state, 10)
 test_that("expanded inventory is correct", {
@@ -51,8 +51,8 @@ test_that("replace pipe", {
 
 
 nn <- nrow(inv.failed)
-state1 <- list(inventory=inv.failed, budget=30000, time=10)
-state2 <- list(inventory=inv.failed, budget=2000, time=10)
+state1 <- list(inventory=inv.failed, budget=Inf, time=10)
+state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace older than", {
 
@@ -61,7 +61,7 @@ test_that("replace older than", {
   s2 <- replace.older.than(state=state1, max.age=5)$inventory
   expect_equal(nrow(s2), nn+nn)
   s3 <- replace.older.than(state=state2, max.age=5)$inventory
-  expect_equal(nrow(s3), nn+2)
+  expect_equal(nrow(s3), nn)
   budget <- replace.older.than(state=state2, max.age=5)$budget
   expect_equal(budget, 0)
 
@@ -70,8 +70,8 @@ test_that("replace older than", {
 
 
 nn <- nrow(inv.failed)
-state1 <- list(inventory=inv.failed, budget=30000, time=10)
-state2 <- list(inventory=inv.failed, budget=2000, time=10)
+state1 <- list(inventory=inv.failed, budget=Inf, time=10)
+state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace.more.failures.than", {
 
@@ -80,17 +80,16 @@ test_that("replace.more.failures.than", {
   s2 <- replace.more.failures.than(state=state1, max.failures=0)$inventory
   expect_equal(nrow(s2), nn+nn)
   s3 <- replace.more.failures.than(state=state2, max.failures=0)$inventory
-  expect_equal(nrow(s3), nn+2)
+  expect_equal(nrow(s3), nn)
   budget <- replace.more.failures.than(state=state2, max.failures=0)$budget
   expect_equal(budget, 0)
 
 })
 
 
-
 nn <- nrow(inv.failed)
-state1 <- list(inventory=inv.failed, budget=30000, time=10)
-state2 <- list(inventory=inv.failed, budget=2000, time=10)
+state1 <- list(inventory=inv.failed, budget=Inf, time=10)
+state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace oldest", {
 
@@ -99,7 +98,7 @@ test_that("replace oldest", {
   s2 <- replace.n.oldest(state=state1, n=3)$inventory
   expect_equal(nrow(s2), nn+3)
   s3 <- replace.n.oldest(state=state2, n=Inf)$inventory
-  expect_equal(nrow(s3), nn+2)
+  expect_equal(nrow(s3), nn)
   budget <- replace.n.oldest(state=state2, n=Inf)$budget
   expect_equal(budget, 0)
 
@@ -107,8 +106,8 @@ test_that("replace oldest", {
 
 
 nn <- nrow(inv.failed)
-state1 <- list(inventory=inv.failed, budget=30000, time=10)
-state2 <- list(inventory=inv.failed, budget=2000, time=10)
+state1 <- list(inventory=inv.failed, budget=Inf, time=10)
+state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace randomly", {
 
@@ -117,7 +116,7 @@ test_that("replace randomly", {
   s2 <- replace.n.random(state=state1, n=3)$inventory
   expect_equal(nrow(s2), nn+3)
   s3 <- replace.n.random(state=state2, n=Inf)$inventory
-  expect_equal(nrow(s3), nn+2)
+  expect_equal(nrow(s3), nn)
   budget <- replace.n.random(state=state2, n=Inf)$budget
   expect_equal(budget, 0)
 

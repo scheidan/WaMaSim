@@ -27,6 +27,8 @@ install_github("scheidan/WaMaSim")
 
 This is a minimal example how you can run the simulation:
 ```R
+library(WaMaSim)
+
 ## 1) Define failure rate
 f.rate <- function(age, time.last.failure, n.failure) {
   if(n.failure==0){

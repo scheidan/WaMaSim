@@ -30,6 +30,12 @@ replace.more.failures.than(max.failures=2) \%>\%
   replace.older.than(max.age=8) \%>\%
   replace.n.random(n=4)
 
+
+}
+\seealso{
+\code{\link{replace.n.highest.risk}},
+\code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+\code{\link{do.nothing}}
 }
 \author{
 Andreas Scheidegger

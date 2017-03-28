@@ -4,10 +4,7 @@
 \name{WaMaSim}
 \alias{WaMaSim}
 \alias{WaMaSim-package}
-\title{WaMaSim is a package to simulate the effect of different
-rehabiliation strategies for water distribution systems. It is an education tool
-used for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
-See the documentation for \code{\link{simulate}} to get started.}
+\title{WaMaSim - Water Management Simulator}
 \description{
 WaMaSim is a package to simulate the effect of different
 rehabiliation strategies for water distribution systems. It is an education tool

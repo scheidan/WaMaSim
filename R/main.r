@@ -10,6 +10,8 @@
 ##' @import magrittr
 NULL
 
+##' WaMaSim - Water Management Simulator
+##' 
 ##' WaMaSim is a package to simulate the effect of different
 ##' rehabiliation strategies for water distribution systems. It is an education tool
 ##' used for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
@@ -50,6 +52,10 @@ NULL
 ##' @return A list of length \code{t.sim+1} containing all modeled states. A state
 ##' is a list consisting of the time, the budget, and the inventory at a given point in time.
 ##'
+##' @seealso Different replacement strategies are implemented: \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
+##' 
 ##' @examples
 ##'
 ##' ## Define failure rate

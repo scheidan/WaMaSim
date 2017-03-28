@@ -70,6 +70,9 @@ replace.pipes <- function(state, idx){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% do.nothing
 ##'
+##' @seealso  \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+##' \code{\link{replace.more.failures.than}}
 ##' @export
 do.nothing <- function(state){
   return(state)
@@ -97,7 +100,11 @@ do.nothing <- function(state){
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
 ##'   replace.n.random(n=4)
-##' 
+##'
+##'
+##' @seealso  \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}},
+##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
 replace.older.than <- function(state, max.age){
   inv <- state$inventory
@@ -134,7 +141,11 @@ replace.older.than <- function(state, max.age){
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
 ##'   replace.n.random(n=4)
-##' 
+##'
+##'
+##' @seealso  \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+##' \code{\link{do.nothing}}
 ##' @export
 replace.more.failures.than <- function(state, max.failures){
   inv <- state$inventory
@@ -170,7 +181,10 @@ replace.more.failures.than <- function(state, max.failures){
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
 ##'   replace.n.random(n=4)
-##' 
+##'
+##' @seealso  \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
 replace.n.oldest <- function(state, n){
   inv <- state$inventory
@@ -207,6 +221,9 @@ replace.n.oldest <- function(state, n){
 ##'   replace.older.than(max.age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
+##' @seealso  \code{\link{replace.n.highest.risk}},
+##' \code{\link{replace.n.oldest}}, \code{\link{replace.older.than}},
+##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
 replace.n.random <- function(state, n){
   inv <- state$inventory
@@ -245,6 +262,9 @@ replace.n.random <- function(state, n){
 ##'   replace.older.than(max.age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
+##' @seealso \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}},
+##' \code{\link{replace.older.than}},
+##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
 replace.n.highest.risk <- function(state, n, failure.rate){
   inv <- state$inventory

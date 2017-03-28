@@ -79,6 +79,11 @@ result <- simulate(t.sim=100,                  # run it for 100 years
                    initial.inventory=50)       # start the simulation with 50 new pipes
 
 }
+\seealso{
+Different replacement strategies are implemented: \code{\link{replace.n.highest.risk}},
+\code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+\code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
+}
 \author{
 Andreas Scheidegger
 }

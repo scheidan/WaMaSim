@@ -20,6 +20,11 @@ Dummy strategy to model no rehabilitation at all.
 mystrategy <- . \%>\% do.nothing
 
 }
+\seealso{
+\code{\link{replace.n.highest.risk}},
+\code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
+\code{\link{replace.more.failures.than}}
+}
 \author{
 Andreas Scheidegger
 }

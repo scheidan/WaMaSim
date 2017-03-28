@@ -121,3 +121,21 @@ test_that("replace randomly", {
   expect_equal(budget, 0)
 
 })
+
+
+nn <- nrow(inv.failed)
+state1 <- list(inventory=inv.failed, budget=Inf, time=10)
+state2 <- list(inventory=inv.failed, budget=0, time=10)
+
+test_that("replace highest risk", {
+
+  s1 <- replace.n.highest.risk(state=state1, n=Inf, f.rate.test)$inventory
+  expect_equal(nrow(s1), nn+nn)
+  s2 <- replace.n.highest.risk(state=state1, n=3, f.rate.test)$inventory
+  expect_equal(nrow(s2), nn+3)
+  s3 <- replace.n.highest.risk(state=state2, n=Inf, f.rate.test)$inventory
+  expect_equal(nrow(s3), nn)
+  budget <- replace.n.highest.risk(state=state2, n=Inf, f.rate.test)$budget
+  expect_equal(budget, 0)
+
+})

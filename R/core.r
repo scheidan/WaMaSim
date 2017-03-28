@@ -116,9 +116,11 @@ expand <- function(state, n.new, separat.budget=FALSE){
 ##' .. content for \details{} ..
 ##' @title Calculate (random) costs of a failure
 ##' @param diameter diameter [mm]
-##' @return cost of failure [CHF] consisnting of repair and damage costs
+##' @param mean boolan. Should the expected cost be returned? Random otherwise.
+##' @return if \code(mean=FALSE), the cost of failure [CHF] are sampled
+##' randomly. If \code(mean=TRUE), the expected average costs are returned.
 ##' @author Andreas Scheidegger
-failure.cost <- function(diameter){
+failure.cost <- function(diameter, mean=FALSE){
   n <- length(diameter)
   
   mean.fix <- 6500
@@ -130,8 +132,12 @@ failure.cost <- function(diameter){
   meanlog <- log(mean.damage) - 0.5*log(1 + (sd.damage/mean.damage)^2)
   sdlog <- sqrt(log(1 + sd.damage^2/(mean.damage^2)))
 
-  ##      repair costs               +       damage costs
-  max(0, rnorm(n, mean.fix, sd.fix)) + rlnorm(n, meanlog, sdlog)
+  if(mean){
+    return(mean.fix + mean.damage)
+  } else {
+    ##            repair costs               +       damage costs
+    return(max(0, rnorm(n, mean.fix, sd.fix)) + rlnorm(n, meanlog, sdlog))
+  }
 }
 
 

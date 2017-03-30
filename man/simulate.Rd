@@ -77,7 +77,7 @@ result <- simulate(t.sim=100,                  # run it for 100 years
                    initial.budget=30e6,
                    initial.inventory=500)      # start the simulation with 50 new pipes
 
-str(result)    # jsut a long list of states
+str(result)    # just a long list of states
 
 ## convinience functions extract budget or time are available
 result$time  

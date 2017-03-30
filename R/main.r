@@ -139,7 +139,7 @@ simulate <- function(t.sim,
 
   ## list to keep results
   result <- vector("list", t.sim+1)
-  names(result) <- paste0("time.", 1:(t.sim+1))
+  names(result) <- paste0("time.", 0:(t.sim))
   result[[1]] <- state
 
   ## loop over time

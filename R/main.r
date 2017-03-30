@@ -120,7 +120,7 @@ simulate <- function(t.sim,
   ## build initial state
   if(!is.null(initial.inventory) &
      !is.numeric(initial.inventory) &
-     !(class(initial.inventory)=="data.frame")) {
+     !("data.frame" %in% class(initial.inventory))) {
     stop("Argument 'initial.inventory' must be NULL, an integer or a data.frame!")
   }
   if(is.null(initial.inventory)){
@@ -130,10 +130,10 @@ simulate <- function(t.sim,
     state <- list(inventory=make.empty.inventory(), budget=initial.budget, time=0)
     state <- expand(state, initial.inventory, separat.budget=TRUE)
   }
-  if(class(initial.inventory)=="data.frame"){
-    if(colnames(initial.inventory) != c("ID","time.construction", "replacement.value",
+  if("data.frame" %in% class(initial.inventory)){
+    if(!all(colnames(initial.inventory) == c("ID","time.construction", "replacement.value",
                                         "diameter", "n.failure", "time.last.failure",
-                                        "time.end.of.service", "in.service")){
+                                        "time.end.of.service", "in.service"))){
       stop("incorrect column names of 'initial.inventory'!")
     }
     class(initial.inventory) <- c("data.frame", "inventory")

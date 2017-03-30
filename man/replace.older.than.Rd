@@ -4,12 +4,14 @@
 \alias{replace.older.than}
 \title{Rehabilitation strategy: replace pipes over \code{max.age}}
 \usage{
-replace.older.than(state, max.age)
+replace.older.than(state, max.age, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
 \item{max.age}{pipes older than max.age are replaced}
+
+\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
 }
 \value{
 a state list
@@ -20,7 +22,7 @@ replaced if the budget remains positive.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
-mystrategy <- . \%>\% replace.older.than(max.age=85)
+mystrategy <- . \%>\% replace.older.than(max.age=85, max.costs=20000)
 
 ## or combine multiple strategies to define more complex strategy:
 mystrategy <- . \%>\%

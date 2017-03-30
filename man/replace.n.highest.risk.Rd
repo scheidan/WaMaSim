@@ -4,7 +4,7 @@
 \alias{replace.n.highest.risk}
 \title{Rehabilitation strategy: replace the \code{n} pipes with the highest risk}
 \usage{
-replace.n.highest.risk(state, n, failure.rate)
+replace.n.highest.risk(state, n, failure.rate, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
@@ -12,6 +12,8 @@ replace.n.highest.risk(state, n, failure.rate)
 \item{n}{maximal number of pipes to replace}
 
 \item{failure.rate}{failur rate function. Typically the same as passed to \code{\link{simulate}}.}
+
+\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
 }
 \value{
 a state list
@@ -26,7 +28,7 @@ and the expected failure costs.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
-mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate)
+mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
 
 ## or combine multiple strategies to define more complex strategy:
 mystrategy <- . \%>\%

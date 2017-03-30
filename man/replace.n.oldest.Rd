@@ -4,12 +4,14 @@
 \alias{replace.n.oldest}
 \title{Rehabilitation strategy: replace the n oldest pipes}
 \usage{
-replace.n.oldest(state, n)
+replace.n.oldest(state, n, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
 \item{n}{maximal number of pipes to replace}
+
+\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
 }
 \value{
 a state list

@@ -20,7 +20,8 @@ replace.pipe <- function(idx, inv, time){
   }
 
   ## retire old pipe
-  inv$time.end.of.service[idx] <- time  
+  inv$time.end.of.service[idx] <- time
+  inv$in.service[idx] <- FALSE
 
   ## add new pipe
   new.pipe <- data.frame(ID=id,
@@ -41,20 +42,23 @@ replace.pipe <- function(idx, inv, time){
 ## -----------
 ## helper function replace all pipes at index 'idx'
 ## if the budget allows for it
-replace.pipes <- function(state, idx){
+replace.pipes <- function(state, idx, max.costs){
   inv <- state$inventory
-  budget <- state$budget
   time <- state$time
-  
+  budget.intern <- min(state$budget, max.costs) # money that can be spent
+
   for(i in idx) {
-    if(budget < inv$replacement.value[i]){
+    if(budget.intern < inv$replacement.value[i]){
       break
     } else {
-      budget <- budget - inv$replacement.value[i] # pay for new pipe
-      inv <- replace.pipe(i, inv, time)           # get new pipe
+      budget.intern <- budget.intern - inv$replacement.value[i] # pay for new pipe
+      inv <- replace.pipe(i, inv, time)                         # get new pipe
     }
   }
-  return(list(inventory=inv, budget=budget, time=time))
+
+  ## calculate remaining money
+  new.budget <- state$budget - min(state$budget, max.costs) + budget.intern
+  return(list(inventory=inv, budget=new.budget, time=time))
 }
 
 
@@ -86,12 +90,13 @@ do.nothing <- function(state){
 ##' @title Rehabilitation strategy: replace pipes over \code{max.age}
 ##' @param state a state list
 ##' @param max.age pipes older than max.age are replaced
+##' @param max.costs maximal amount of money allowed to be spend on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate():
-##' mystrategy <- . %>% replace.older.than(max.age=85)
+##' mystrategy <- . %>% replace.older.than(max.age=85, max.costs=20000)
 ##'
 ##' ## or combine multiple strategies to define more complex strategy:
 ##' mystrategy <- . %>%
@@ -106,15 +111,15 @@ do.nothing <- function(state){
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.older.than <- function(state, max.age){
+replace.older.than <- function(state, max.age, max.costs=Inf){
   inv <- state$inventory
   
   ## find the index of the pipes older than max.age that are *in use* 
   age <- state$time - inv$time.construction
-  idx <- which(age > max.age & inv$in.service)
+  idx <- which((age > max.age) & inv$in.service)
 
   ## build new pipes and update budget
-  state <- replace.pipes(state, idx)
+  state <- replace.pipes(state, idx, max.costs)
   
   return(state)
 }
@@ -127,12 +132,13 @@ replace.older.than <- function(state, max.age){
 ##' @title Rehabilitation strategy: replace pipes with too many failures
 ##' @param state a state list
 ##' @param max.failures maximal allowed number of failures
+##' @param max.costs maximal amount of money allowed to be spend on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate():
-##' mystrategy <- . %>% replace.more.failures.than(max.failure=3)
+##' mystrategy <- . %>% replace.more.failures.than(max.failure=3, max.costs=20000)
 ##'
 ##' ## or combine multiple strategies to define more complex strategy:
 ##' mystrategy <- . %>%
@@ -147,14 +153,14 @@ replace.older.than <- function(state, max.age){
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
 ##' \code{\link{do.nothing}}
 ##' @export
-replace.more.failures.than <- function(state, max.failures){
+replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
   inv <- state$inventory
 
   ## find the index of the pipes older >max.age that are *in use* 
   idx <- which(inv$n.failure > max.failures & inv$in.service)
 
   ## build new pipes and update budget
-  state <- replace.pipes(state, idx)
+  state <- replace.pipes(state, idx, max.costs)
   
   return(state)
 }
@@ -167,6 +173,7 @@ replace.more.failures.than <- function(state, max.failures){
 ##' @title Rehabilitation strategy: replace the n oldest pipes
 ##' @param state a state list
 ##' @param n maximal number of pipes to replace
+##' @param max.costs maximal amount of money allowed to be spend on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##' 
@@ -186,7 +193,7 @@ replace.more.failures.than <- function(state, max.failures){
 ##' \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.n.oldest <- function(state, n){
+replace.n.oldest <- function(state, n, max.costs=Inf){
   inv <- state$inventory
   
   ## find the index of the n oldest pipes *in use*
@@ -194,7 +201,7 @@ replace.n.oldest <- function(state, n){
   idx <- order(inv$time.construction + as.numeric(!inv$in.service)*1E10)[1:(min(n, n.in.service))]
 
   ## build new pipes and update budget
-  state <- replace.pipes(state, idx)
+  state <- replace.pipes(state, idx, max.costs)
   
   return(state)
 }
@@ -206,6 +213,7 @@ replace.n.oldest <- function(state, n){
 ##' @title Rehabilitation strategy: replace \code{n} randomly selected pipes
 ##' @param state a state list
 ##' @param n maximal number of pipes to replace
+##' @param max.costs maximal amount of money allowed to be spend on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -225,14 +233,14 @@ replace.n.oldest <- function(state, n){
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.older.than}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.n.random <- function(state, n){
+replace.n.random <- function(state, n, max.costs=Inf){
   inv <- state$inventory
   
   ## sample randomly the index of pipes that are *in use* 
   idx <- sample(which(inv$in.service), min(sum(inv$in.service), n))
 
   ## build new pipes and update budget
-  state <- replace.pipes(state, idx)
+  state <- replace.pipes(state, idx, max.costs)
   
   return(state)
 }
@@ -247,12 +255,13 @@ replace.n.random <- function(state, n){
 ##' @param state a state list
 ##' @param n maximal number of pipes to replace
 ##' @param failure.rate failur rate function. Typically the same as passed to \code{\link{simulate}}.
+##' @param max.costs maximal amount of money allowed to be spend on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate():
-##' mystrategy <- . %>% replace.n.highest.risk(n=2, failure.rate=f.rate)
+##' mystrategy <- . %>% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
 ##'
 ##' ## or combine multiple strategies to define more complex strategy:
 ##' mystrategy <- . %>%
@@ -266,7 +275,7 @@ replace.n.random <- function(state, n){
 ##' \code{\link{replace.older.than}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.n.highest.risk <- function(state, n, failure.rate){
+replace.n.highest.risk <- function(state, n, failure.rate, max.costs=Inf){
   inv <- state$inventory
 
   ## calculate risk
@@ -285,7 +294,7 @@ replace.n.highest.risk <- function(state, n, failure.rate){
   idx <- order(risk, decreasing=TRUE)[1:min(n,sum(inv$in.service))]
  
   ## build new pipes and update budget
-  state <- replace.pipes(state, idx)
+  state <- replace.pipes(state, idx, max.costs)
   
   return(state)
 }

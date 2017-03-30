@@ -4,12 +4,14 @@
 \alias{replace.more.failures.than}
 \title{Rehabilitation strategy: replace pipes with too many failures}
 \usage{
-replace.more.failures.than(state, max.failures)
+replace.more.failures.than(state, max.failures, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
 \item{max.failures}{maximal allowed number of failures}
+
+\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
 }
 \value{
 a state list
@@ -20,7 +22,7 @@ replaced if the budget remains positive.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
-mystrategy <- . \%>\% replace.more.failures.than(max.failure=3)
+mystrategy <- . \%>\% replace.more.failures.than(max.failure=3, max.costs=20000)
 
 ## or combine multiple strategies to define more complex strategy:
 mystrategy <- . \%>\%

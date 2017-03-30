@@ -4,12 +4,14 @@
 \alias{replace.n.random}
 \title{Rehabilitation strategy: replace \code{n} randomly selected pipes}
 \usage{
-replace.n.random(state, n)
+replace.n.random(state, n, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
 \item{n}{maximal number of pipes to replace}
+
+\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
 }
 \value{
 a state list

@@ -90,6 +90,12 @@ NULL
 ##'                    initial.budget=30e6,
 ##'                    initial.inventory=500)      # start the simulation with 50 new pipes
 ##'
+##' str(result)    # jsut a long list of states
+##' 
+##' ## convinience functions extract budget or time are available
+##' result$time  
+##' result$budget
+##'
 ##' @author Andreas Scheidegger
 ##' @export
 simulate <- function(t.sim,
@@ -167,5 +173,27 @@ simulate <- function(t.sim,
     result[[t+1]] <- state
   }
 
+  class(result) <- "statelist"
   return(result)
 }
+
+##' Convinience function to extract the time and budget.
+##'
+##' @title Extract time and budget as vector
+##' @param x a state list
+##' @param name either \code{budget} or \code{time}
+##' @return a vector of the time or budgets
+##' @author Andreas Scheidegger
+##'
+##' @examples
+##' \dontrun{
+##' result$budget     # result is a 'statelist' returned from simulate
+##' result$time
+##' }
+##' @export
+`$.statelist` <- function(x, name){
+  if(name %in% c("budget", "time")) {
+    sapply(x, function(y) getElement(y, name)) 
+  }
+}
+

@@ -12,7 +12,7 @@ NULL
 
 ##' WaMaSim - Water Management Simulator
 ##'
-##' WaMaSim is a package to simulate the effect of different
+##' WaMaSim is a package that simulates the effect of different
 ##' rehabiliation strategies for water distribution systems. It is an education tool
 ##' used for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
 ##' See the documentation for \code{\link{simulate}} to get started.
@@ -58,7 +58,7 @@ NULL
 ##'
 ##' @examples
 ##
-##' # Define failure rate
+##' # Define the failure rate
 ##' f.rate <- function(age, time.last.failure, n.failure) {
 ##'   if(n.failure==0){
 ##'     return(1/30)
@@ -70,20 +70,20 @@ NULL
 ##'
 ##' # Define a complicated (and probably useless) rehabilitation strategy
 ##' mystrategy <- . %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=100e3) %>%
+##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.more.failures.than(max.failures=5) %>%
 ##'   replace.older.than(max.age=100, max.cost=2e6) %>%
-##'   replace.n.oldest(n=2) %>%
-##'   replace.n.random(n=2)
+##'   replace.n.oldest(n=3) %>%
+##'   replace.n.random(n=4)
 ##' # This defines a prioritized sequence of annual rehabilitation steps as follows: 
 ##' # each year, and as long as we have enough budget, replace first the 2 pipes 
 ##' # with the highest risk of failure, then all pipes with more than 5 failures,
-##' # then all pipes older then 100 years, then the 3 oldest remaining pipes, and
-##' # finally replace 4 randomly selected pipes. Additionally, spendings on the first 
-##' # rehabilitation strategy, \code{replace.n.highest.risk}, can not exceed a maximum 
-##' # budget of 100,000 CHF.
+##' # then all pipes more than 100 years old, then the 3 oldest remaining pipes, and
+##' # finally replace 4 randomly selected pipes. Additionally, spendings on the 
+##' # rehabilitation strategy \code{replace.older.than}, can not exceed a maximum 
+##' # budget of 2,000,000 CHF.
 ##'
-##' # Define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement)
+##' # Or, define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement)
 ##' mystrategy <- . %>% do.nothing
 ##' 
 ##'
@@ -92,13 +92,13 @@ NULL
 ##'                    expansion=0,                # do not expand the system
 ##'                    rehabilitation=mystrategy,  # use the strategy defined above
 ##'                    failure.rate=f.rate,        # use the failure rate defined above
-##'                    income = 1e6,               # the annual income
+##'                    income=1e6,                 # the annual income
 ##'                    initial.budget=30e6,        # the initial budget
 ##'                    initial.inventory=500)      # start the simulation with 500 new pipes
 ##'
 ##' str(result)    # just a long list of states
 ##' 
-##' ## Convenience functions to extract budget or time are available
+##' # Convenience functions to extract budget or time are available
 ##' result$time  
 ##' result$budget
 ##'

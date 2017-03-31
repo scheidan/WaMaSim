@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.r
 \name{$.statelist}
 \alias{$.statelist}
-\title{Extract time and budget as vector}
+\title{Extract time or budget as vectors}
 \usage{
 \method{$}{statelist}(x, name)
 }
@@ -12,10 +12,10 @@
 \item{name}{either \code{budget} or \code{time}}
 }
 \value{
-a vector of the time or budgets
+a vector of the time or budget
 }
 \description{
-Convinience function to extract the time and budget.
+Convenience functions to extract the time or budget.
 }
 \examples{
 \dontrun{

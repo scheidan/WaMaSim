@@ -9,30 +9,31 @@ replace.n.highest.risk(state, n, failure.rate, max.costs = Inf)
 \arguments{
 \item{state}{a state list}
 
-\item{n}{maximal number of pipes to replace}
+\item{n}{number of highest risk pipes to replace}
 
-\item{failure.rate}{failur rate function. Typically the same as passed to \code{\link{simulate}}.}
+\item{failure.rate}{failure rate function. Typically the same as passed to \code{\link{simulate}}.}
 
-\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
+\item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
 \value{
 a state list
 }
 \description{
-Strategy to prioritize pipes with high risk. Pipes are only
+Strategy to prioritize pipes with the highest risk. Pipes are only
 replaced if the budget remains positive.
 }
 \details{
-The Risk is defined as the product of the probability to fail next year
+The risk is defined as the product of the failure probability in the next year
 and the expected failure costs.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
 mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
 
-## or combine multiple strategies to define more complex strategy:
+## or define a more complex strategy by combining multiple strategies
+## into a prioritized sequence:
 mystrategy <- . \%>\%
-replace.more.failures.than(max.failures=2) \%>\%
+  replace.more.failures.than(max.failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
   replace.older.than(max.age=8) \%>\%

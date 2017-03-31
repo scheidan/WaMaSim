@@ -2,21 +2,21 @@
 % Please edit documentation in R/core.r
 \name{failure.cost}
 \alias{failure.cost}
-\title{Calculate (random) costs of a failure}
+\title{Calculate the (random) cost of a failure}
 \usage{
 failure.cost(diameter, mean = FALSE)
 }
 \arguments{
 \item{diameter}{diameter [mm]}
 
-\item{mean}{boolan. Should the expected cost be returned? Random otherwise.}
+\item{mean}{boolean. Should the expected cost be returned? Random otherwise.}
 }
 \value{
-if \code{mean=FALSE}, the cost of failure [CHF] are sampled
+if \code{mean=FALSE}, the failure costs [CHF] are sampled
 randomly. If \code{mean=TRUE}, the expected average costs are returned.
 }
 \description{
-Calulate the costs caused by a failure according to sectio 5.1 in
+Calculate the costs caused by a failure according to Section 5.1 in
 "The Water Network Management Challenge", Max Maurer 2017.
 }
 \author{

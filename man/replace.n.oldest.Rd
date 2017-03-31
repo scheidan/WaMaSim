@@ -2,31 +2,32 @@
 % Please edit documentation in R/strategies.r
 \name{replace.n.oldest}
 \alias{replace.n.oldest}
-\title{Rehabilitation strategy: replace the n oldest pipes}
+\title{Rehabilitation strategy: replace the \code{n} oldest pipes}
 \usage{
 replace.n.oldest(state, n, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
-\item{n}{maximal number of pipes to replace}
+\item{n}{number of oldest pipes to replace}
 
-\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
+\item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
 \value{
 a state list
 }
 \description{
-Prioritize old pipes for replacement. Pipes are only
+Prioritize the oldest pipes for replacement. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
 mystrategy <- . \%>\% replace.n.oldest(n=10)
 
-## or combine multiple strategies to define more complex strategy:
+## or define a more complex strategy by combining multiple strategies
+## into a prioritized sequence:
 mystrategy <- . \%>\%
-replace.more.failures.than(max.failures=2) \%>\%
+  replace.more.failures.than(max.failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
   replace.older.than(max.age=8) \%>\%

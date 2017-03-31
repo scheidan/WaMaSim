@@ -30,21 +30,21 @@ make.empty.inventory <- function() {
 ##' @return a vector of diameters
 ##' @author Andreas Scheidegger
 sample.diameter <- function(n=1){
-  diam <- c(60, 70, 80, 100, 110, 120, 125, 130, 150, 175,
-            180, 200, 250, 300, 350, 400, 500)
-  freq <- c(4, 4, 285, 503, 1, 34, 625, 2, 2431,
-            4, 13, 698, 84, 265, 2, 22, 23)
+  diam <- c(80, 100, 125, 150, 180,
+            200, 250, 300, 400, 500)
+  freq <- c(293, 503, 661, 2431, 17,
+            698, 84, 265, 24, 23)
 
   sample(x=diam, n, replace=TRUE, prob=freq)
 }
 
 
-##' Based on eq(1) of "The water Network Management Chalange, Maurer (2017)",
-##' assuming a pipe length of 100m
+##' Based on Eq(1) of "The Water Network Management Challenge, Max Maurer 2017",
+##' assuming a pipe length of 100m.
 ##' 
 ##' @title Calculate replacement value  
 ##' @param diameter diameter of the pipe [mm]
-##' @return replacement value in CHF
+##' @return replacement value [CHF]
 ##' @author Andreas Scheidegger
 replacement.value <- function(diameter){
   100*(1.9*diameter + 540)              
@@ -55,11 +55,11 @@ replacement.value <- function(diameter){
 ##' @title Model expansion of the network
 ##' @param state a state object
 ##' @param n.new \code{n.new} number of new pipes
-##' @param separat.budget Boolan, if \code{TRUE} expansion cost are
-##' not counted on the normal budget
+##' @param separate.budget boolean, if \code{TRUE} then expansion costs 
+##' are not deducted from the normal budget
 ##' @return the expanded inventory
 ##' @author Andreas Scheidegger
-expand <- function(state, n.new, separat.budget=FALSE){
+expand <- function(state, n.new, separate.budget=FALSE){
 
   inventory <- state$inventory
   budget <- state$budget
@@ -76,8 +76,8 @@ expand <- function(state, n.new, separat.budget=FALSE){
   values <- replacement.value(diameters)
 
   ## check budget 
-  if(!separat.budget){
-    ## check how many pipes can be build with the budget?
+  if(!separate.budget){
+    ## check how many pipes can be built with the budget
     n.new <- max(which(cumsum(values)<state$budget), 0) 
     budget <- budget - ifelse(n.new>0, sum(values[1:n.new]), 0)
   }
@@ -104,13 +104,13 @@ expand <- function(state, n.new, separat.budget=FALSE){
 }
 
 
-##' Calulate the costs caused by a failure according to sectio 5.1 in
+##' Calculate the costs caused by a failure according to Section 5.1 in
 ##' "The Water Network Management Challenge", Max Maurer 2017.
 ##' 
-##' @title Calculate (random) costs of a failure
+##' @title Calculate the (random) cost of a failure
 ##' @param diameter diameter [mm]
-##' @param mean boolan. Should the expected cost be returned? Random otherwise.
-##' @return if \code{mean=FALSE}, the cost of failure [CHF] are sampled
+##' @param mean boolean. Should the expected cost be returned? Random otherwise.
+##' @return if \code{mean=FALSE}, the failure costs [CHF] are sampled
 ##' randomly. If \code{mean=TRUE}, the expected average costs are returned.
 ##' @author Andreas Scheidegger
 failure.cost <- function(diameter, mean=FALSE){
@@ -135,13 +135,14 @@ failure.cost <- function(diameter, mean=FALSE){
 
 
 
-##' Lets pipe randomly fail. If a failure happened, the damage costs are
+##' Allows pipes to randomly fail. If a failure occurs, the failure costs (repair + damage) are
 ##' calculated and subtracted from the budget. Note, that this may result in a negative budget.
 ##'
 ##' @title Model failures of the network
 ##' @param state a state object
-##' @param failure.rate function returning the failure rate.
-##' \code{failure.rate} must take \code{age, time.last.failure, n.failure} as arguments.
+##' @param failure.rate function returning the annual failure rate; i.e. the probability of a 
+##' pipe failing in the current year of simulation.
+##' \code{failure.rate} must take \code{age, time.last.failure, n.failure} as input arguments.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
 fail <- function(state, failure.rate){
@@ -156,11 +157,11 @@ fail <- function(state, failure.rate){
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
                                 inventory$time.last.failure[i],
                                 inventory$n.failure[i])
-      ## add failure, calculate costs
+      ## add failure, calculate costs, update budget
       if(runif(1) < Prob.fail){
         inventory$time.last.failure[i] <- time
         inventory$n.failure[i] <- inventory$n.failure[i] + 1
-        budget <- budget - failure.cost(inventory$diameter[i]) # keep track of costs
+        budget <- budget - failure.cost(inventory$diameter[i]) # update budget
       }
     } 
   }

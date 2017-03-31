@@ -10,11 +10,11 @@ replacement.value(diameter)
 \item{diameter}{diameter of the pipe [mm]}
 }
 \value{
-replacement value in CHF
+replacement value [CHF]
 }
 \description{
-Based on eq(1) of "The water Network Management Chalange, Maurer (2017)",
-assuming a pipe length of 100m
+Based on Eq(1) of "The Water Network Management Challenge, Max Maurer 2017",
+assuming a pipe length of 100m.
 }
 \author{
 Andreas Scheidegger

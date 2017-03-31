@@ -9,14 +9,15 @@ fail(state, failure.rate)
 \arguments{
 \item{state}{a state object}
 
-\item{failure.rate}{function returning the failure rate.
-\code{failure.rate} must take \code{age, time.last.failure, n.failure} as arguments.}
+\item{failure.rate}{function returning the annual failure rate; i.e. the probability of a 
+pipe failing in the current year of simulation.
+\code{failure.rate} must take \code{age, time.last.failure, n.failure} as input arguments.}
 }
 \value{
 inventory with new failures
 }
 \description{
-Lets pipe randomly fail. If a failure happened, the damage costs are
+Allows pipes to randomly fail. If a failure occurs, the failure costs (repair + damage) are
 calculated and subtracted from the budget. Note, that this may result in a negative budget.
 }
 \author{

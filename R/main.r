@@ -23,31 +23,31 @@ NULL
 
 
 
-##' Simulates failures expansion, rehabilitation and cost of a pipe network.
+##' Simulates failures, expansion, rehabilitation, and costs of a water supply pipe network.
 ##' The simulation is stochastic.
 ##'
 ##' The rehabilitation is defined by combining different simple replacement strategies.
-##' See the example how the strategies are can be linked with the pipe operator.
+##' See the example for how this can be done using the \code{mystrategy} function input.
 ##'
 ##' The \code{failure.rate} is a function that must take \code{age, time.last.failure, n.failure}
 ##' as arguments.
 ##'
-##' The cost are calcualted as a finction of the diameter, assuming all pipes have a
+##' The costs are calculated as a function of the pipe diameter, assuming all pipes have a
 ##' length of 100 meters.
 ##'
 ##' @title Run a simulation
 ##'
 ##' @param t.sim number of years to simulate
-##' @param expansion either a scalar the describing the number of pipes added
-##' every year, or a vector of length \code{t.sim}.
-##' @param rehabilitation a (combination of) rehabilitation strategies functions. See details below.
-##' @param failure.rate a function describing the probability for a pipe to fail in the next
-##' year given the pipe age, number of failures, and the point in time of the last failure (if any).
+##' @param expansion either a scalar describing the number of pipes added
+##' every year to expand the pipe network, or a vector of length \code{t.sim}.
+##' @param rehabilitation a (combination of) rehabilitation strategy function(s). See details below.
+##' @param failure.rate a function describing the probability of a pipe failing in the next year
+##' given its age, number of previous failures, and the point in time of the last failure (if any).
 ##' @param income either a scalar describing the annual income, or a vector of length \code{t.sim}.
 ##' @param initial.budget initial budget
-##' @param initial.inventory If equals \code{NULL} the simulation starts without pipes,
-##' if \code{initial.inventory} is integer it specifies the number of initial pipes,
-##' or it can be a \code{data.frame} containing the initial inventory.
+##' @param initial.inventory if \code{initial.inventory} equals \code{NULL} the simulation starts 
+##' without pipes, if it is an integer it specifies the number of initial pipes,
+##' or alternatively it can be a \code{data.frame} containing the initial inventory of pipes.
 ##'
 ##' @return A list of length \code{t.sim+1} containing all modeled states. A state
 ##' is a list consisting of the time, the budget, and the inventory at a given point in time.
@@ -68,31 +68,37 @@ NULL
 ##' }
 ##'
 ##'
-##' # define a complicated (and probably useless) rehabilitation strategy
+##' # Define a complicated (and probably useless) rehabilitation strategy
 ##' mystrategy <- . %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=100e3) %>%
 ##'   replace.more.failures.than(max.failures=5) %>%
 ##'   replace.older.than(max.age=100, max.cost=2e6) %>%
 ##'   replace.n.oldest(n=2) %>%
 ##'   replace.n.random(n=2)
-##' # This means: every year (if we have enough budget!), replace first the 2 pipes
-##' # with the highest risk, then all pipes with more than 5 failures,
-##' # then all pipes older then 100 years, then the 3 oldest pipes remaining, and
-##' # finally replace 4 randomly selected pipes.
+##' # This defines a prioritized sequence of annual rehabilitation steps as follows: 
+##' # each year, and as long as we have enough budget, replace first the 2 pipes 
+##' # with the highest risk of failure, then all pipes with more than 5 failures,
+##' # then all pipes older then 100 years, then the 3 oldest remaining pipes, and
+##' # finally replace 4 randomly selected pipes. Additionally, spendings on the first 
+##' # rehabilitation strategy, \code{replace.n.highest.risk}, can not exceed a maximum 
+##' # budget of 100,000 CHF.
 ##'
+##' # Define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement)
+##' mystrategy <- . %>% do.nothing
+##' 
 ##'
-##' # run the simulation
+##' # Run the simulation
 ##' result <- simulate(t.sim=100,                  # run it for 100 years
 ##'                    expansion=0,                # do not expand the system
 ##'                    rehabilitation=mystrategy,  # use the strategy defined above
 ##'                    failure.rate=f.rate,        # use the failure rate defined above
 ##'                    income = 1e6,               # the annual income
-##'                    initial.budget=30e6,
-##'                    initial.inventory=500)      # start the simulation with 50 new pipes
+##'                    initial.budget=30e6,        # the initial budget
+##'                    initial.inventory=500)      # start the simulation with 500 new pipes
 ##'
 ##' str(result)    # just a long list of states
 ##' 
-##' ## convinience functions extract budget or time are available
+##' ## Convenience functions to extract budget or time are available
 ##' result$time  
 ##' result$budget
 ##'
@@ -121,14 +127,14 @@ simulate <- function(t.sim,
   if(!is.null(initial.inventory) &
      !is.numeric(initial.inventory) &
      !("data.frame" %in% class(initial.inventory))) {
-    stop("Argument 'initial.inventory' must be NULL, an integer or a data.frame!")
+    stop("Argument 'initial.inventory' must be NULL, an integer, or a data.frame!")
   }
   if(is.null(initial.inventory)){
     state <- list(inventory=make.empty.inventory(), budget=initial.budget, time=0)
   }
   if(is.numeric(initial.inventory)){
     state <- list(inventory=make.empty.inventory(), budget=initial.budget, time=0)
-    state <- expand(state, initial.inventory, separat.budget=TRUE)
+    state <- expand(state, initial.inventory, separate.budget=TRUE)
   }
   if("data.frame" %in% class(initial.inventory)){
     if(!all(colnames(initial.inventory) == c("ID","time.construction", "replacement.value",
@@ -159,7 +165,7 @@ simulate <- function(t.sim,
 
     ## 1) expand system
     state <- expand(state, expansion[t],
-                    separat.budget=TRUE)
+                    separate.budget=TRUE)
 
     ## 2) collect fees
     state$budget <- state$budget + income[t]
@@ -177,12 +183,12 @@ simulate <- function(t.sim,
   return(result)
 }
 
-##' Convinience function to extract the time and budget.
+##' Convenience functions to extract the time or budget.
 ##'
-##' @title Extract time and budget as vector
+##' @title Extract time or budget as vectors
 ##' @param x a state list
 ##' @param name either \code{budget} or \code{time}
-##' @return a vector of the time or budgets
+##' @return a vector of the time or budget
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples

@@ -8,11 +8,11 @@
 
 
 ## -----------
-## helper function replace pipe at 'idx'
+## helper function to replace pipe at 'idx'
 ## in the inventory with a new one
 replace.pipe <- function(idx, inv, time){
 
-  ## get new ID
+  ## get new pipe ID
   if(nrow(inv)>0){
     id <- max(inv$ID) + 1
   } else {
@@ -23,7 +23,7 @@ replace.pipe <- function(idx, inv, time){
   inv$time.end.of.service[idx] <- time
   inv$in.service[idx] <- FALSE
 
-  ## add new pipe
+  ## add new pipe to inventory
   new.pipe <- data.frame(ID=id,
                          time.construction=time,
                          replacement.value=inv$replacement.value[idx],
@@ -40,7 +40,7 @@ replace.pipe <- function(idx, inv, time){
 
 
 ## -----------
-## helper function replace all pipes at index 'idx'
+## helper function to replace all pipes at index 'idx'
 ## if the budget allows for it
 replace.pipes <- function(state, idx, max.costs){
   inv <- state$inventory
@@ -65,7 +65,7 @@ replace.pipes <- function(state, idx, max.costs){
 
 ##' Dummy strategy to model no rehabilitation at all.
 ##' 
-##' @title Rehabilitation strategy: no rehabilitation
+##' @title Rehabilitation strategy: no pipe replacement, repairs only
 ##' @param state a state list
 ##' @return a state list
 ##' @author Andreas Scheidegger
@@ -84,13 +84,13 @@ do.nothing <- function(state){
 
 
 
-##' Strategy to replace pipes over a given age. Pipes are only
+##' Strategy to replace pipes older than a given age. Pipes are only
 ##' replaced if the budget remains positive.
 ##'
-##' @title Rehabilitation strategy: replace pipes over \code{max.age}
+##' @title Rehabilitation strategy: replace pipes older than \code{max.age}
 ##' @param state a state list
 ##' @param max.age pipes older than max.age are replaced
-##' @param max.costs maximal amount of money allowed to be spend on this strategy
+##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -98,9 +98,10 @@ do.nothing <- function(state){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% replace.older.than(max.age=85, max.costs=20000)
 ##'
-##' ## or combine multiple strategies to define more complex strategy:
+##' ## or define a more complex strategy by combining multiple strategies
+##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##' replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(max.failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
@@ -114,7 +115,7 @@ do.nothing <- function(state){
 replace.older.than <- function(state, max.age, max.costs=Inf){
   inv <- state$inventory
   
-  ## find the index of the pipes older than max.age that are *in use* 
+  ## find the index of the pipes older than \code{max.age} and that are in use
   age <- state$time - inv$time.construction
   idx <- which((age > max.age) & inv$in.service)
 
@@ -132,7 +133,7 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 ##' @title Rehabilitation strategy: replace pipes with too many failures
 ##' @param state a state list
 ##' @param max.failures maximal allowed number of failures
-##' @param max.costs maximal amount of money allowed to be spend on this strategy
+##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -140,9 +141,10 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% replace.more.failures.than(max.failure=3, max.costs=20000)
 ##'
-##' ## or combine multiple strategies to define more complex strategy:
+##' ## or define a more complex strategy by combining multiple strategies
+##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##' replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(max.failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
@@ -156,7 +158,7 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
   inv <- state$inventory
 
-  ## find the index of the pipes older >max.age that are *in use* 
+  ## find the index of the pipes with more failures than \code{max.failures} and that are in use
   idx <- which(inv$n.failure > max.failures & inv$in.service)
 
   ## build new pipes and update budget
@@ -167,13 +169,13 @@ replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
 
 
 
-##' Prioritize old pipes for replacement. Pipes are only
+##' Prioritize the oldest pipes for replacement. Pipes are only
 ##' replaced if the budget remains positive.
 ##'
-##' @title Rehabilitation strategy: replace the n oldest pipes
+##' @title Rehabilitation strategy: replace the \code{n} oldest pipes
 ##' @param state a state list
-##' @param n maximal number of pipes to replace
-##' @param max.costs maximal amount of money allowed to be spend on this strategy
+##' @param n number of oldest pipes to replace
+##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##' 
@@ -181,9 +183,10 @@ replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% replace.n.oldest(n=10)
 ##'
-##' ## or combine multiple strategies to define more complex strategy:
+##' ## or define a more complex strategy by combining multiple strategies
+##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##' replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(max.failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
@@ -196,7 +199,7 @@ replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
 replace.n.oldest <- function(state, n, max.costs=Inf){
   inv <- state$inventory
   
-  ## find the index of the n oldest pipes *in use*
+  ## find the index of the n oldest pipes that are in use
   n.in.service <- sum(inv$in.service)
   idx <- order(inv$time.construction + as.numeric(!inv$in.service)*1E10)[1:(min(n, n.in.service))]
 
@@ -212,8 +215,8 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##'
 ##' @title Rehabilitation strategy: replace \code{n} randomly selected pipes
 ##' @param state a state list
-##' @param n maximal number of pipes to replace
-##' @param max.costs maximal amount of money allowed to be spend on this strategy
+##' @param n number of random pipes to replace
+##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -221,9 +224,10 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% replace.n.random(n=10)
 ##'
-##' ## or combine multiple strategies to define more complex strategy:
+##' ## or define a more complex strategy by combining multiple strategies
+##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##' replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(max.failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
@@ -236,7 +240,7 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 replace.n.random <- function(state, n, max.costs=Inf){
   inv <- state$inventory
   
-  ## sample randomly the index of pipes that are *in use* 
+  ## randomly sample the index of pipes (from those that are in use)
   idx <- sample(which(inv$in.service), min(sum(inv$in.service), n))
 
   ## build new pipes and update budget
@@ -245,17 +249,17 @@ replace.n.random <- function(state, n, max.costs=Inf){
   return(state)
 }
 
-##' Strategy to prioritize pipes with high risk. Pipes are only
+##' Strategy to prioritize pipes with the highest risk. Pipes are only
 ##' replaced if the budget remains positive.
 ##'
-##' The Risk is defined as the product of the probability to fail next year
+##' The risk is defined as the product of the failure probability in the next year
 ##' and the expected failure costs.
 ##' 
 ##' @title Rehabilitation strategy: replace the \code{n} pipes with the highest risk
 ##' @param state a state list
-##' @param n maximal number of pipes to replace
-##' @param failure.rate failur rate function. Typically the same as passed to \code{\link{simulate}}.
-##' @param max.costs maximal amount of money allowed to be spend on this strategy
+##' @param n number of highest risk pipes to replace
+##' @param failure.rate failure rate function. Typically the same as passed to \code{\link{simulate}}.
+##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
@@ -263,9 +267,10 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' ## define a strategy function that can be passed to simulate():
 ##' mystrategy <- . %>% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
 ##'
-##' ## or combine multiple strategies to define more complex strategy:
+##' ## or define a more complex strategy by combining multiple strategies
+##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##' replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(max.failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
 ##'   replace.older.than(max.age=8) %>%
@@ -278,7 +283,7 @@ replace.n.random <- function(state, n, max.costs=Inf){
 replace.n.highest.risk <- function(state, n, failure.rate, max.costs=Inf){
   inv <- state$inventory
 
-  ## calculate risk
+  ## calculate risk (for the pipes in use)
   risk <- rep(NA, nrow(inv))
   for(i in which(inv$in.service)){
     

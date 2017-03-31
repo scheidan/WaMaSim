@@ -2,7 +2,7 @@
 % Please edit documentation in R/strategies.r
 \name{replace.older.than}
 \alias{replace.older.than}
-\title{Rehabilitation strategy: replace pipes over \code{max.age}}
+\title{Rehabilitation strategy: replace pipes older than \code{max.age}}
 \usage{
 replace.older.than(state, max.age, max.costs = Inf)
 }
@@ -11,22 +11,23 @@ replace.older.than(state, max.age, max.costs = Inf)
 
 \item{max.age}{pipes older than max.age are replaced}
 
-\item{max.costs}{maximal amount of money allowed to be spend on this strategy}
+\item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
 \value{
 a state list
 }
 \description{
-Strategy to replace pipes over a given age. Pipes are only
+Strategy to replace pipes older than a given age. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
 ## define a strategy function that can be passed to simulate():
 mystrategy <- . \%>\% replace.older.than(max.age=85, max.costs=20000)
 
-## or combine multiple strategies to define more complex strategy:
+## or define a more complex strategy by combining multiple strategies
+## into a prioritized sequence:
 mystrategy <- . \%>\%
-replace.more.failures.than(max.failures=2) \%>\%
+  replace.more.failures.than(max.failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
   replace.older.than(max.age=8) \%>\%

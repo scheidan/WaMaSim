@@ -4,15 +4,15 @@
 \alias{expand}
 \title{Model expansion of the network}
 \usage{
-expand(state, n.new, separat.budget = FALSE)
+expand(state, n.new, separate.budget = FALSE)
 }
 \arguments{
 \item{state}{a state object}
 
 \item{n.new}{\code{n.new} number of new pipes}
 
-\item{separat.budget}{Boolan, if \code{TRUE} expansion cost are
-not counted on the normal budget}
+\item{separate.budget}{boolean, if \code{TRUE} then expansion costs 
+are not deducted from the normal budget}
 }
 \value{
 the expanded inventory

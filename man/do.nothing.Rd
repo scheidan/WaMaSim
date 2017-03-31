@@ -2,7 +2,7 @@
 % Please edit documentation in R/strategies.r
 \name{do.nothing}
 \alias{do.nothing}
-\title{Rehabilitation strategy: no rehabilitation}
+\title{Rehabilitation strategy: no pipe replacement, repairs only}
 \usage{
 do.nothing(state)
 }

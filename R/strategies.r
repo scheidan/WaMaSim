@@ -115,7 +115,7 @@ do.nothing <- function(state){
 replace.older.than <- function(state, max.age, max.costs=Inf){
   inv <- state$inventory
   
-  ## find the index of the pipes older than \code{max.age} and that are in use
+  ## find the index of the pipes older than max.age and that are in use
   age <- state$time - inv$time.construction
   idx <- which((age > max.age) & inv$in.service)
 
@@ -158,7 +158,7 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
   inv <- state$inventory
 
-  ## find the index of the pipes with more failures than \code{max.failures} and that are in use
+  ## find the index of the pipes with more failures than max.failures and that are in use
   idx <- which(inv$n.failure > max.failures & inv$in.service)
 
   ## build new pipes and update budget

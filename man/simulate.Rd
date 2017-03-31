@@ -63,11 +63,11 @@ mystrategy <- . \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.random(n=4)
 # This defines a prioritized sequence of annual rehabilitation steps as follows: 
-# each year, and as long as we have enough budget, replace first the 2 pipes 
+# each year, and as long as there is enough budget, replace first the 2 pipes 
 # with the highest risk of failure, then all pipes with more than 5 failures,
 # then all pipes more than 100 years old, then the 3 oldest remaining pipes, and
 # finally replace 4 randomly selected pipes. Additionally, spendings on the 
-# rehabilitation strategy \\code{replace.older.than}, can not exceed a maximum 
+# rehabilitation strategy replace.older.than can not exceed a maximum 
 # budget of 2,000,000 CHF.
 
 # Or, define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement)

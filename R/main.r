@@ -96,9 +96,10 @@ NULL
 ##'                    initial.budget=30e6,        # the initial budget
 ##'                    initial.inventory=500)      # start the simulation with 500 new pipes
 ##'
+##' # View results
 ##' str(result)    # just a long list of states
 ##' 
-##' # Convenience functions to extract budget or time are available
+##' # Convenient functions to extract budget or time are available
 ##' result$time  
 ##' result$budget
 ##'
@@ -183,7 +184,7 @@ simulate <- function(t.sim,
   return(result)
 }
 
-##' Convenience functions to extract the time or budget.
+##' Convenient functions to extract the time or budget.
 ##'
 ##' @title Extract time or budget as vectors
 ##' @param x a state list

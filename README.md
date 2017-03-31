@@ -67,7 +67,13 @@ result <- simulate(t.sim=100,                  # run it for 100 years
                    initial.budget=30e6,        # the initial budget
                    initial.inventory=500)      # start the simulation with 500 new pipes
 
+
+## 4) View results
 str(result)                                    # a list of model states
+
+# Convenient functions to extract budget or time are available
+result$time  
+result$budget
 ```
 
 See the package help for more information.

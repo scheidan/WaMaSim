@@ -15,7 +15,7 @@
 a vector of the time or budget
 }
 \description{
-Convenience functions to extract the time or budget.
+Convenient functions to extract the time or budget.
 }
 \examples{
 \dontrun{

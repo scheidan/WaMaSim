@@ -168,3 +168,47 @@ fail <- function(state, failure.rate){
 
   return(list(inventory=inventory, budget=budget, time=time))
 }
+
+
+
+##' The number of failures per year is calculated
+##' from a state list produces by \code{\link{simulate_network}}.
+##'
+##' @title Calculate number failure per year
+##' @param statelist a state list
+##' @return vector containing the number of failures per year
+##' @author Andreas Scheidegger
+##' @export
+failures.per.year <- function(statelist) {
+  sapply(statelist, function(x) sum(x$inventory$time.last.failure == x$time, na.rm=TRUE))
+}
+
+
+##' The number of newly built pipes per year is calculated
+##' from a state list produces by \code{\link{simulate_network}}.
+##'
+##' @title Calculate number of newly built pipes for each year
+##' @param statelist a state list
+##' @return vector containing the number  of newly built pipes for each year
+##' @author Andreas Scheidegger
+##' @export
+pipes.built.per.year <- function(statelist) {
+  sapply(statelist, function(x) sum(x$inventory$time.last.failure == x$time, na.rm=TRUE))
+}
+
+
+##' The annual total costs are calculated. The total costs consist
+##' of damage, failure and rehabilitation costs.
+##'
+##' @title Calculate the total costs per year
+##' @param statelist a state list
+##' @param income the same values as passed to
+##' \code{simulate_network}. Either a scalar or vector.
+##' @return a vector of the total cost per year
+##' @author Andreas Scheidegger
+##' @export
+costs.per.year <- function(statelist, income) {
+  if(length(income)==1) income <- rep(income, length(statelist)-1)
+  c(0, income - diff(statelist$budget))
+}
+

@@ -74,6 +74,11 @@ str(result)                                    # a list of model states
 # Convenient functions to extract budget or time are available
 result$time
 result$budget
+
+# calculate some statistics
+costs.per.year(result, income=1e6)
+pipes.built.per.year(result)
+failures.per.year(result)
 ```
 
 See the package help for more information.

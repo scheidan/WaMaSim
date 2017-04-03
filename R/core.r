@@ -142,7 +142,7 @@ failure.cost <- function(diameter, mean=FALSE){
 ##' @param state a state object
 ##' @param failure.rate function returning the annual failure rate; i.e. the probability of a 
 ##' pipe failing in the current year of simulation.
-##' \code{failure.rate} must take \code{age, time.last.failure, n.failure} as input arguments.
+##' \code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
 fail <- function(state, failure.rate){
@@ -155,7 +155,7 @@ fail <- function(state, failure.rate){
     if(is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
-                                inventory$time.last.failure[i],
+                                time-inventory$age.last.failure[i],
                                 inventory$n.failure[i])
       ## add failure, calculate costs, update budget
       if(runif(1) < Prob.fail){

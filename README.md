@@ -30,7 +30,7 @@ This is a minimal example of how you can run the simulation:
 library(WaMaSim)
 
 ## 1) Define the failure rate
-f.rate <- function(age, time.last.failure, n.failure) {
+f.rate <- function(age, age.last.failure, n.failure) {
   if(n.failure==0){
     return(1/30)
   } else {
@@ -39,22 +39,22 @@ f.rate <- function(age, time.last.failure, n.failure) {
 }
 
 
-## 2) Define a complicated (and probably useless) rehabilitation strategy
+## 2) Define a complicated (and pretty useless) rehabilitation strategy
 mystrategy <- . %>%
   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
   replace.more.failures.than(max.failures=5) %>%
   replace.older.than(max.age=100, max.cost=2e6)  %>%
   replace.n.oldest(n=3) %>%
   replace.n.random(n=4)
-## This defines a prioritized sequence of annual rehabilitation steps as follows: 
-## each year, and as long as there is enough budget, replace first the 2 pipes 
+## This defines a prioritized sequence of annual rehabilitation steps as follows:
+## each year, and as long as there is enough budget, replace first the 2 pipes
 ## with the highest risk of failure, then all pipes with more than 5 failures,
 ## then all pipes more than 100 years old, then the 3 oldest remaining pipes, and
-## finally replace 4 randomly selected pipes. Additionally, spendings on the 
-## rehabilitation strategy replace.older.than can not exceed a maximum 
+## finally replace 4 randomly selected pipes. Additionally, spendings on the
+## rehabilitation strategy replace.older.than can not exceed a maximum
 ## budget of 2,000,000 CHF.
 
-## Or, define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement)
+## Or, define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement):
 # mystrategy <- . %>% do.nothing
 
 
@@ -72,7 +72,7 @@ result <- simulate(t.sim=100,                  # run it for 100 years
 str(result)                                    # a list of model states
 
 # Convenient functions to extract budget or time are available
-result$time  
+result$time
 result$budget
 ```
 

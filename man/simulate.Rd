@@ -38,15 +38,17 @@ The simulation is stochastic.
 The rehabilitation is defined by combining different simple replacement strategies.
 See the example for how this can be done using the \code{mystrategy} function input.
 
-The \code{failure.rate} is a function that must take \code{age, time.last.failure, n.failure}
-as arguments.
+The failure behavior is defined with by the function \code{failure.rate}.
+It calculates the probability, that a pipe fails within the next year based on pipe age,
+pipe age at the last failure, and the number of failures. Note, the model
+makes the assumption that a pipe cannot fail more than once per year.
 
 The costs are calculated as a function of the pipe diameter, assuming all pipes have a
 length of 100 meters.
 }
 \examples{
 # Define the failure rate
-f.rate <- function(age, time.last.failure, n.failure) {
+f.rate <- function(age, age.last.failure, n.failure) {
   if(n.failure==0){
     return(1/30)
   } else {

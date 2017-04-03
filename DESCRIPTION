@@ -3,7 +3,7 @@ Type: Package
 Title:  simulate rehabiliation strategies for water distribution systems
 Version: 0.1.0
 Date: 2017-03-28
-Author: Andreas Scheidegger
+Author: Andreas Scheidegger, Rachel Barrett
 Maintainer:  <andreas.scheidegger@eawag.ch>
 Description: This is a teching tool  for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
 License: GPL-3 

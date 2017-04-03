@@ -190,19 +190,23 @@ simulate_network <- function(t.sim,
 ##'
 ##' @title Extract time or budget as vectors
 ##' @param x a state list
-##' @param name either \code{budget} or \code{time}
-##' @return a vector of the time or budget
+##' @param name name of the element to extract
+##' @return a vector of the time or budget, or a state
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' \dontrun{
-##' result$budget     # result is a 'statelist' returned from simulate_network
-##' result$time
+##' str(result)      # result is a 'statelist' returned from simulate_network
+##' result$budget    # vector of budget
+##' result$time      # vector of time
+##' result$time.22   # state list of time 22
 ##' }
 ##' @export
 `$.statelist` <- function(x, name){
   if(name %in% c("budget", "time")) {
     sapply(x, function(y) getElement(y, name)) 
+  } else {
+    getElement(x, name)
   }
 }
 

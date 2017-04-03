@@ -9,18 +9,20 @@
 \arguments{
 \item{x}{a state list}
 
-\item{name}{either \code{budget} or \code{time}}
+\item{name}{name of the element to extract}
 }
 \value{
-a vector of the time or budget
+a vector of the time or budget, or a state
 }
 \description{
 Convenient functions to extract the time or budget.
 }
 \examples{
 \dontrun{
-result$budget     # result is a 'statelist' returned from simulate_network
-result$time
+str(result)      # result is a 'statelist' returned from simulate_network
+result$budget    # vector of budget
+result$time      # vector of time
+result$time.22   # state list of time 22
 }
 }
 \author{

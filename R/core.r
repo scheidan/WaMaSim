@@ -193,7 +193,7 @@ failures.per.year <- function(statelist) {
 ##' @author Andreas Scheidegger
 ##' @export
 pipes.built.per.year <- function(statelist) {
-  sapply(statelist, function(x) sum(x$inventory$time.last.failure == x$time, na.rm=TRUE))
+  sapply(statelist, function(x) sum(x$inventory$time.construction == x$time, na.rm=TRUE))
 }
 
 

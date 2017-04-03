@@ -11,7 +11,7 @@ replace.n.highest.risk(state, n, failure.rate, max.costs = Inf)
 
 \item{n}{number of highest risk pipes to replace}
 
-\item{failure.rate}{failure rate function. Typically the same as passed to \code{\link{simulate}}.}
+\item{failure.rate}{failure rate function. Typically the same as passed to \code{\link{simulate_network}}.}
 
 \item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
@@ -27,7 +27,7 @@ The risk is defined as the product of the failure probability in the next year
 and the expected failure costs.
 }
 \examples{
-## define a strategy function that can be passed to simulate():
+## define a strategy function that can be passed to simulate_network():
 mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
 
 ## or define a more complex strategy by combining multiple strategies

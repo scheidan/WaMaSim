@@ -21,7 +21,7 @@ Prioritize the oldest pipes for replacement. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
-## define a strategy function that can be passed to simulate():
+## define a strategy function that can be passed to simulate_network():
 mystrategy <- . \%>\% replace.n.oldest(n=10)
 
 ## or define a more complex strategy by combining multiple strategies

@@ -9,7 +9,7 @@
 WaMaSim is a package that simulates the effect of different
 rehabiliation strategies for water distribution systems. It is an education tool
 used for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
-See the documentation for \code{\link{simulate}} to get started.
+See the documentation for \code{\link{simulate_network}} to get started.
 }
 \author{
 Andreas Scheidegger

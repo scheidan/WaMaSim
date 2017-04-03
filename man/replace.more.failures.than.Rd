@@ -21,7 +21,7 @@ Replace pipes with a high number of failures. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
-## define a strategy function that can be passed to simulate():
+## define a strategy function that can be passed to simulate_network():
 mystrategy <- . \%>\% replace.more.failures.than(max.failure=3, max.costs=20000)
 
 ## or define a more complex strategy by combining multiple strategies

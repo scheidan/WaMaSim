@@ -19,7 +19,7 @@ Convenient functions to extract the time or budget.
 }
 \examples{
 \dontrun{
-result$budget     # result is a 'statelist' returned from simulate
+result$budget     # result is a 'statelist' returned from simulate_network
 result$time
 }
 }

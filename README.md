@@ -59,7 +59,7 @@ mystrategy <- . %>%
 
 
 ## 3) Run the simulation
-result <- simulate(t.sim=100,                  # run it for 100 years
+result <- simulate_network(t.sim=100,          # run it for 100 years
                    expansion=0,                # do not expand the system
                    rehabilitation=mystrategy,  # use the strategy defined above
                    failure.rate=f.rate,        # use the failure rate defined above

@@ -15,7 +15,7 @@ NULL
 ##' WaMaSim is a package that simulates the effect of different
 ##' rehabiliation strategies for water distribution systems. It is an education tool
 ##' used for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
-##' See the documentation for \code{\link{simulate}} to get started.
+##' See the documentation for \code{\link{simulate_network}} to get started.
 ##' @name WaMaSim
 ##' @author Andreas Scheidegger
 ##' @docType package
@@ -90,7 +90,7 @@ NULL
 ##' 
 ##'
 ##' # Run the simulation
-##' result <- simulate(t.sim=100,                  # run it for 100 years
+##' result <- simulate_network(t.sim=100,          # run it for 100 years
 ##'                    expansion=0,                # do not expand the system
 ##'                    rehabilitation=mystrategy,  # use the strategy defined above
 ##'                    failure.rate=f.rate,        # use the failure rate defined above
@@ -107,13 +107,13 @@ NULL
 ##'
 ##' @author Andreas Scheidegger
 ##' @export
-simulate <- function(t.sim,
-                     expansion,
-                     rehabilitation,
-                     failure.rate,
-                     income=0,
-                     initial.budget=Inf,
-                     initial.inventory=NULL) {
+simulate_network <- function(t.sim,
+                             expansion,
+                             rehabilitation,
+                             failure.rate,
+                             income=0,
+                             initial.budget=Inf,
+                             initial.inventory=NULL) {
 
   if(!("function" %in% class(rehabilitation))){
     stop("argument 'rehabilitation' must be a function!")
@@ -196,7 +196,7 @@ simulate <- function(t.sim,
 ##'
 ##' @examples
 ##' \dontrun{
-##' result$budget     # result is a 'statelist' returned from simulate
+##' result$budget     # result is a 'statelist' returned from simulate_network
 ##' result$time
 ##' }
 ##' @export

@@ -38,8 +38,8 @@ The simulation is stochastic.
 The rehabilitation is defined by combining different simple replacement strategies.
 See the example for how this can be done using the \code{mystrategy} function input.
 
-The failure behavior is defined with by the function \code{failure.rate}.
-It calculates the probability, that a pipe fails within the next year based on pipe age,
+The failure behavior is defined by the function \code{failure.rate}.
+It calculates the probability of a pipe failing within the next year based on pipe age,
 pipe age at the last failure, and the number of failures. Note, the model
 makes the assumption that a pipe cannot fail more than once per year.
 
@@ -57,7 +57,7 @@ f.rate <- function(age, age.last.failure, n.failure) {
 }
 
 
-# Define a complicated (and probably useless) rehabilitation strategy
+# Define a complicated (and pretty useless) rehabilitation strategy
 mystrategy <- . \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
   replace.more.failures.than(max.failures=5) \%>\%
@@ -77,13 +77,13 @@ mystrategy <- . \%>\% do.nothing
 
 
 # Run the simulation
-result <- simulate_network(t.sim=100,          # run it for 100 years
-                   expansion=0,                # do not expand the system
-                   rehabilitation=mystrategy,  # use the strategy defined above
-                   failure.rate=f.rate,        # use the failure rate defined above
-                   income=1e6,                 # the annual income
-                   initial.budget=30e6,        # the initial budget
-                   initial.inventory=500)      # start the simulation with 500 new pipes
+result <- simulate_network(t.sim=100,                  # run it for 100 years
+                           expansion=0,                # do not expand the system
+                           rehabilitation=mystrategy,  # use the strategy defined above
+                           failure.rate=f.rate,        # use the failure rate defined above
+                           income=1e6,                 # the annual income
+                           initial.budget=30e6,        # the initial budget
+                           initial.inventory=500)      # start the simulation with 500 new pipes
 
 # View results
 str(result)    # just a long list of states

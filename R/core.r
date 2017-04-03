@@ -172,9 +172,9 @@ fail <- function(state, failure.rate){
 
 
 ##' The number of failures per year is calculated
-##' from a state list produces by \code{\link{simulate_network}}.
+##' from a state list produced by \code{\link{simulate_network}}.
 ##'
-##' @title Calculate number failure per year
+##' @title Calculate number of failures per year
 ##' @param statelist a state list
 ##' @return vector containing the number of failures per year
 ##' @author Andreas Scheidegger
@@ -185,7 +185,7 @@ failures.per.year <- function(statelist) {
 
 
 ##' The number of newly built pipes per year is calculated
-##' from a state list produces by \code{\link{simulate_network}}.
+##' from a state list produced by \code{\link{simulate_network}}.
 ##'
 ##' @title Calculate number of newly built pipes for each year
 ##' @param statelist a state list

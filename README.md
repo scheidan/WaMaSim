@@ -2,7 +2,7 @@ WaMaSim - Water Management Simulator
 ====================================
 
 _WaMaSim_ is an R package that simulates the effect of different
-rehabiliation strategies for water distribution systems. It is an
+rehabilitation strategies for water distribution systems. It is an
 education tool used for the Water Infrastructure Experimental and
 Computer Laboratory at ETH Zurich, Switzerland.
 
@@ -59,13 +59,13 @@ mystrategy <- . %>%
 
 
 ## 3) Run the simulation
-result <- simulate_network(t.sim=100,          # run it for 100 years
-                   expansion=0,                # do not expand the system
-                   rehabilitation=mystrategy,  # use the strategy defined above
-                   failure.rate=f.rate,        # use the failure rate defined above
-                   income=1e6,                 # the annual income
-                   initial.budget=30e6,        # the initial budget
-                   initial.inventory=500)      # start the simulation with 500 new pipes
+result <- simulate_network(t.sim=100,                  # run it for 100 years
+                           expansion=0,                # do not expand the system
+                           rehabilitation=mystrategy,  # use the strategy defined above
+                           failure.rate=f.rate,        # use the failure rate defined above
+                           income=1e6,                 # the annual income
+                           initial.budget=30e6,        # the initial budget
+                           initial.inventory=500)      # start the simulation with 500 new pipes
 
 
 ## 4) View results
@@ -75,7 +75,7 @@ str(result)                                    # a list of model states
 result$time
 result$budget
 
-# calculate some statistics
+# Calculate some statistics
 costs.per.year(result, income=1e6)
 pipes.built.per.year(result)
 failures.per.year(result)
@@ -88,7 +88,7 @@ See the package help for more information.
 ## Package development
 
 The packages `devtools`, `testthat`, and `roxygen2` are required.
-To build and test this package use the follwing workflow:
+To build and test this package use the following workflow:
 ```R
 library(devtools)
 

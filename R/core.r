@@ -155,8 +155,8 @@ fail <- function(state, failure.rate){
     if(is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
-                                time-inventory$age.last.failure[i],
-                                inventory$n.failure[i])
+                                age.last.failure=time-inventory$time.last.failure[i],
+                                n.failure=inventory$n.failure[i])
       ## add failure, calculate costs, update budget
       if(runif(1) < Prob.fail){
         inventory$time.last.failure[i] <- time

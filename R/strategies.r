@@ -288,8 +288,8 @@ replace.n.highest.risk <- function(state, n, failure.rate, max.costs=Inf){
   for(i in which(inv$in.service)){
     
     Prob.fail <- failure.rate(age=state$time-inv$time.construction[i],
-                              age.last.failure=state$time-inv$time.last.failure[i],
-                              n.failure=inv$n.failure[i])
+                              state$time-inv$time.last.failure[i],
+                              inv$n.failure[i])
 
     expected.failure.cost <- failure.cost(inv$diameter[i], mean=TRUE)
     

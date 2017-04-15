@@ -24,7 +24,9 @@ make.empty.inventory <- function() {
 }
 
 
-##' The diameter distribution is based on a real data set from ???
+##' The diameter distribution is based on a real data set from Lisa Scholten 
+##' (pipe_data.csv). Refer to the old exercise on watermain break modelling
+##' in the ETH Infrastructure Systems course by Max Maurer. 
 ##' @title Sample a diameter of a new pipe.
 ##' @param n number of samples
 ##' @return a vector of diameters
@@ -155,8 +157,8 @@ fail <- function(state, failure.rate){
     if(is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
-                                age.last.failure=time-inventory$time.last.failure[i],
-                                n.failure=inventory$n.failure[i])
+                                time-inventory$time.last.failure[i],
+                                inventory$n.failure[i])
       ## add failure, calculate costs, update budget
       if(runif(1) < Prob.fail){
         inventory$time.last.failure[i] <- time

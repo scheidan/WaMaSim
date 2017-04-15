@@ -13,7 +13,9 @@ sample.diameter(n = 1)
 a vector of diameters
 }
 \description{
-The diameter distribution is based on a real data set from ???
+The diameter distribution is based on a real data set from Lisa Scholten 
+(pipe_data.csv). Refer to the old exercise on watermain break modelling
+in the ETH Infrastructure Systems course by Max Maurer.
 }
 \author{
 Andreas Scheidegger

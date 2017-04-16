@@ -11,7 +11,9 @@ fail(state, failure.rate)
 
 \item{failure.rate}{function returning the annual failure rate; i.e. the probability of a 
 pipe failing in the current year of simulation.
-\code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.}
+\code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.
+Note that in the case of a pipe with zero previous failures (i.e. \code{n.failure}=0), 
+\code{age.last.failure}=NA.}
 }
 \value{
 inventory with new failures

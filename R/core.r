@@ -145,6 +145,8 @@ failure.cost <- function(diameter, mean=FALSE){
 ##' @param failure.rate function returning the annual failure rate; i.e. the probability of a 
 ##' pipe failing in the current year of simulation.
 ##' \code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.
+##' Note that in the case of a pipe with zero previous failures (i.e. \code{n.failure}=0), 
+##' \code{age.last.failure}=NA.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
 fail <- function(state, failure.rate){
@@ -154,11 +156,14 @@ fail <- function(state, failure.rate){
   budget <- state$budget
   
   for(i in seq_len(nrow(inventory))){
-    if(is.na(inventory$time.end.of.service[i])){
+    ## checking time.const<time allows WaMaSim to be run on an initial inventory that includes
+    # some pipes that are planned to be constructed at set times during the simulation period.
+    if(inventory$time.construction[i]<time & is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
-                                time-inventory$time.last.failure[i],
+                                inventory$time.last.failure[i]-inventory$time.construction[i],
                                 inventory$n.failure[i])
+   
       ## add failure, calculate costs, update budget
       if(runif(1) < Prob.fail){
         inventory$time.last.failure[i] <- time

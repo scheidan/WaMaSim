@@ -16,7 +16,7 @@ test_that("empty inventory is correct", {
   expect_true( all(c("data.frame", "inventory") %in% class(empty.inv)) )
 })
 
-state <- list(inventory=empty.inv, budget=3000000, time=1)
+state <- list(inventory=empty.inv, budget=3000000, time=0)
 
 state.exp <- expand(state, 10)
 test_that("expanded inventory is correct", {
@@ -24,8 +24,9 @@ test_that("expanded inventory is correct", {
   expect_equal(nrow(state.exp$inventory), 10)
 })
 
+state.exp$time <- state.exp$time + 1
 
-f.rate.test <- function(age, time.last.failure, n.failure) 1 # fails always
+f.rate.test <- function(age, age.last.failure, n.failure) 1 # fails always
 
 state.failed <- fail(state.exp, f.rate.test)
 test_that("failed inventory is correct", {

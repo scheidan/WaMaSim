@@ -162,9 +162,8 @@ simulate_network <- function(t.sim,
     if(t%%10==0){
       print(paste("Simulate year", t))
     }
-
     ## 0) update time
-    state$time = state$time + 1
+    state$time <- state$time + 1
 
     ## 1) expand system
     state <- expand(state, expansion[t],

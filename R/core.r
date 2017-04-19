@@ -179,7 +179,7 @@ fail <- function(state, failure.rate){
 
 
 ##' The number of failures per year is calculated
-##' from a state list produced by \code{\link{simulate_network}}.
+##' from a state list produced by \code{\link{simulate.network}}.
 ##'
 ##' @title Calculate number of failures per year
 ##' @param statelist a state list
@@ -192,7 +192,7 @@ failures.per.year <- function(statelist) {
 
 
 ##' The number of newly built pipes per year is calculated
-##' from a state list produced by \code{\link{simulate_network}}.
+##' from a state list produced by \code{\link{simulate.network}}.
 ##'
 ##' @title Calculate number of newly built pipes for each year
 ##' @param statelist a state list
@@ -210,7 +210,7 @@ pipes.built.per.year <- function(statelist) {
 ##' @title Calculate the total costs per year
 ##' @param statelist a state list
 ##' @param income the same values as passed to
-##' \code{simulate_network}. Either a scalar or vector.
+##' \code{simulate.network}. Either a scalar or vector.
 ##' @return a vector of the total cost per year
 ##' @author Andreas Scheidegger
 ##' @export

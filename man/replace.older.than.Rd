@@ -21,7 +21,7 @@ Strategy to replace pipes older than a given age. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
-## define a strategy function that can be passed to simulate_network():
+## define a strategy function that can be passed to simulate.network():
 mystrategy <- . \%>\% replace.older.than(max.age=85, max.costs=20000)
 
 ## or define a more complex strategy by combining multiple strategies

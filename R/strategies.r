@@ -57,7 +57,11 @@ replace.pipes <- function(state, idx, max.costs){
   }
 
   ## calculate remaining money
-  new.budget <- state$budget - min(state$budget, max.costs) + budget.intern
+  if(!is.finite(budget.intern)) {
+    new.budget <- Inf
+  } else {
+    new.budget <- state$budget - min(state$budget, max.costs) + budget.intern
+  }
   return(list(inventory=inv, budget=new.budget, time=time))
 }
 

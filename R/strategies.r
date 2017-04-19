@@ -107,7 +107,7 @@ do.nothing <- function(state){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -150,7 +150,7 @@ replace.older.than <- function(state, age, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -192,7 +192,7 @@ replace.more.failures.than <- function(state, failures, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -233,7 +233,7 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -262,21 +262,21 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' @title Rehabilitation strategy: replace the \code{n} pipes with the highest risk
 ##' @param state a state list
 ##' @param n number of highest risk pipes to replace
-##' @param failure.rate failure rate function. Typically the same as passed to \code{\link{simulate.network}}.
+##' @param prob.failure failure rate function. Typically the same as passed to \code{\link{simulate.network}}.
 ##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate.network():
-##' mystrategy <- . %>% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
+##' mystrategy <- . %>% replace.n.highest.risk(n=2, prob.failure=f.rate, max.costs=30000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -284,14 +284,14 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' \code{\link{replace.older.than}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.n.highest.risk <- function(state, n, failure.rate, max.costs=Inf){
+replace.n.highest.risk <- function(state, n, prob.failure, max.costs=Inf){
   inv <- state$inventory
 
   ## calculate risk (for the pipes in use)
   risk <- rep(NA, nrow(inv))
   for(i in which(inv$time.construction<state$time & inv$in.service)){
     
-    Prob.fail <- failure.rate(age=state$time-inv$time.construction[i],
+    Prob.fail <- prob.failure(age=state$time-inv$time.construction[i],
                               inv$time.last.failure[i]-inv$time.construction[i],
                               inv$n.failure[i])
 

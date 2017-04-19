@@ -4,14 +4,14 @@
 \alias{fail}
 \title{Model failures of the network}
 \usage{
-fail(state, failure.rate)
+fail(state, prob.failure)
 }
 \arguments{
 \item{state}{a state object}
 
-\item{failure.rate}{function returning the annual failure rate; i.e. the probability of a 
+\item{prob.failure}{function returning the annual failure rate; i.e. the probability of a 
 pipe failing in the current year of simulation.
-\code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.
+\code{prob.failure} must take \code{age, age.last.failure, n.failure} as input arguments.
 Note that in the case of a pipe with zero previous failures (i.e. \code{n.failure}=0), 
 \code{age.last.failure}=NA.}
 }

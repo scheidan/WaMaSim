@@ -4,8 +4,9 @@
 \alias{simulate.network}
 \title{Simulate the failures, expansion, rehabilitation, and costs of a network}
 \usage{
-\method{simulate}{network}(n.years, expansion, rehabilitation, failure.rate,
-  income = 0, initial.budget = Inf, initial.inventory = NULL)
+\method{simulate}{network}(n.years, expansion, rehabilitation, prob.failure,
+  income = 0, initial.budget = Inf, initial.inventory = NULL,
+  free.expansion = TRUE)
 }
 \arguments{
 \item{n.years}{number of years to simulate}
@@ -15,7 +16,7 @@ every year to expand the pipe network, or a vector of length \code{n.years}.}
 
 \item{rehabilitation}{a (combination of) rehabilitation strategy function(s). See details below.}
 
-\item{failure.rate}{a function describing the probability of a pipe failing in the next year
+\item{prob.failure}{a function describing the probability of a pipe failing in the next year
 given its age, number of previous failures, and the age at the last failure (if any).}
 
 \item{income}{either a scalar describing the annual income, or a vector of length \code{n.years}.}
@@ -25,6 +26,8 @@ given its age, number of previous failures, and the age at the last failure (if 
 \item{initial.inventory}{if it is an integer it specifies the
 number of initial pipes, or alternatively it can be a \code{data.frame}
 containing the initial inventory of pipes.}
+
+\item{free.expansion}{if \code{TRUE} costs for network expansion are not deducted from the budget.}
 }
 \value{
 an updated state list
@@ -39,13 +42,56 @@ See the example for how this can be done using the \code{mystrategy} function in
 If the strategies vary over time, see \code{\link{initiate.network}} and
 \code{\link{simulate.network.period}}.
 
-The failure behavior is defined by the function \code{failure.rate}.
+The failure behavior is defined by the function \code{prob.failure}.
 It calculates the probability of a pipe failing within the next year based on pipe age,
 pipe age at the last failure, and the number of failures. Note, the model
 makes the assumption that a pipe cannot fail more than once per year.
 
 The costs are calculated as a function of the pipe diameter, assuming all pipes have a
 length of 100 meters.
+}
+\examples{
+## -----------
+## define model parameters
+
+## Define the annual probability of a failure
+prob.failure.exp <- function(age, age.last.failure, n.failure) {
+  if(n.failure==0){
+    return(1/30)
+  } else {
+    return(1/10)
+  }
+}
+
+## define a complicated (and probably useless) rehabilitation strategy
+mystrategy <- . \%>\%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) \%>\%
+  replace.more.failures.than(failures=5) \%>\%
+  replace.older.than(age=70, max.cost=2e6)  \%>\%
+  replace.n.oldest(n=3) \%>\%
+  replace.n.random(n=2)
+## This means: every year (if we have enough budget!), replace first the 2 pipes
+## with the highest risk, then all pipes with more than 5 failures,
+## then all pipes older then 70 years (up to costs of 2e6), then the 3
+## oldest pipes remaining, and finally replace 2 randomly selected pipes. 
+
+
+## -----------
+## run the simulation
+
+result <- simulate.network(n.years = 100,                   # run it for 100 years
+                           expansion = 10,                  # build 10 pipes per year (if money is available)
+                           rehabilitation = mystrategy,     # use the strategy defined above
+                           prob.failure = prob.failure.exp, # use the probability function defined above
+                           income = 1e6,                    # the annual income
+                           initial.budget = 1e7,   
+                           initial.inventory = 50,          # start the simulation with 50 new pipes
+                           free.expansion = FALSE)          # 
+
+## look at some results
+## str(result)
+## str(result$time.100)
+
 }
 \seealso{
 For more fine-grained control see \code{\link{initiate.network}}

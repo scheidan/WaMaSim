@@ -71,7 +71,7 @@ initiate.network <- function(inventory=0,
 ##' The rehabilitation is defined by combining different simple replacement strategies.
 ##' See the example for how this can be done using the \code{mystrategy} function input.
 ##'
-##' The failure behavior is defined by the function \code{failure.rate}.
+##' The failure behavior is defined by the function \code{prob.failure}.
 ##' It calculates the probability of a pipe failing within the next year based on pipe age,
 ##' pipe age at the last failure, and the number of failures. Note, the model
 ##' makes the assumption that a pipe cannot fail more than once per year.
@@ -85,19 +85,72 @@ initiate.network <- function(inventory=0,
 ##' @param expansion either a scalar describing the number of pipes added
 ##' every year to expand the pipe network, or a vector of length \code{n.years}.
 ##' @param rehabilitation a (combination of) rehabilitation strategy function(s). See details below.
-##' @param failure.rate a function describing the probability of a pipe failing in the next year
+##' @param prob.failure a function describing the probability of a pipe failing in the next year
 ##' given its age, number of previous failures, and the age at the last failure (if any).
 ##' @param income either a scalar describing the annual income, or a vector of length \code{n.years}.
+##' @param free.expansion if \code{TRUE} costs for network expansion are not deducted from the budget.
 ##' @return an updated state list
 ##' @seealso \code{\link{simulate.network}} provides a slightly more convenient interface.
 ##' @author Andreas Scheidegger
+##'
+##' @examples
+##' ## -----------
+##' ## define model parameters
+##' 
+##' ## Define the annual probability of a failure
+##' prob.failure.exp <- function(age, age.last.failure, n.failure) {
+##'   if(n.failure==0){
+##'     return(1/30)
+##'   } else {
+##'     return(1/10)
+##'   }
+##' }
+##' 
+##' ## define a complicated (and probably useless) rehabilitation strategy
+##' mystrategy <- . %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
+##'   replace.more.failures.than(failures=5) %>%
+##'   replace.older.than(age=70, max.cost=2e6)  %>%
+##'   replace.n.oldest(n=3) %>%
+##'   replace.n.random(n=2)
+##' ## This means: every year (if we have enough budget!), replace first the 2 pipes
+##' ## with the highest risk, then all pipes with more than 5 failures,
+##' ## then all pipes older then 70 years (up to costs of 2e6), then the 3
+##' ## oldest pipes remaining, and finally replace 2 randomly selected pipes. 
+##' 
+##' 
+##' ## -----------
+##' ## run the simulation in steps
+##' 
+##' statelist <- initiate.network(inventory = 50, budget = 1e7)
+##' 
+##' statelist <- simulate.network.period(statelist,                       # state list to update
+##'                                      n.years = 20,                    # run it for 20 years
+##'                                      expansion = 10,                  # build 10 pipes per year (if money is available)
+##'                                      rehabilitation = mystrategy,     # use the strategy defined above
+##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
+##'                                      income = 1e6)                    # the annual income
+##' 
+##' statelist <- simulate.network.period(statelist,                       # state list to update
+##'                                      n.years = 10,                    # run it for 10 more years
+##'                                      expansion = 2,                   # now, build only 2 pipes per year (if money is available)
+##'                                      rehabilitation = mystrategy,     # use the strategy defined above
+##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
+##'                                      income = 1e6)     
+##' 
+##' 
+##' ## look at some results
+##' ## str(statelist)
+##' ## str(statelist$time.30)
+##' 
 ##' @export
 simulate.network.period <- function(statelist,
                                     n.years,
                                     expansion,
                                     rehabilitation,
-                                    failure.rate,
-                                    income=0) {
+                                    prob.failure,
+                                    income=0,
+                                    free.expansion=TRUE) {
 
   last.year <- statelist[[length(statelist)]]$time
   state <- statelist[[length(statelist)]]
@@ -119,19 +172,19 @@ simulate.network.period <- function(statelist,
 
     ## 1) expand system
     state <- expand(state, expansion[i],
-                    separate.budget=TRUE)
+                    separate.budget=free.expansion)
 
     ## 2) collect fees
     state$budget <- state$budget + income[i]
 
     ## 3) simulate failures
-    state <- fail(state, failure.rate)
+    state <- fail(state, prob.failure)
 
     ## 4) rehabilitate pipes
     state <- rehabilitation(state)
 
     statelist[[t+1]] <- state
-    names(statelist[t+1]) <- paste0("time.", t)
+    names(statelist)[t+1] <- paste0("time.", t)
 
     i <- i+1
   }
@@ -149,7 +202,7 @@ simulate.network.period <- function(statelist,
 ##' If the strategies vary over time, see \code{\link{initiate.network}} and
 ##' \code{\link{simulate.network.period}}.
 ##'
-##' The failure behavior is defined by the function \code{failure.rate}.
+##' The failure behavior is defined by the function \code{prob.failure}.
 ##' It calculates the probability of a pipe failing within the next year based on pipe age,
 ##' pipe age at the last failure, and the number of failures. Note, the model
 ##' makes the assumption that a pipe cannot fail more than once per year.
@@ -162,13 +215,14 @@ simulate.network.period <- function(statelist,
 ##' @param expansion either a scalar describing the number of pipes added
 ##' every year to expand the pipe network, or a vector of length \code{n.years}.
 ##' @param rehabilitation a (combination of) rehabilitation strategy function(s). See details below.
-##' @param failure.rate a function describing the probability of a pipe failing in the next year
+##' @param prob.failure a function describing the probability of a pipe failing in the next year
 ##' given its age, number of previous failures, and the age at the last failure (if any).
 ##' @param income either a scalar describing the annual income, or a vector of length \code{n.years}.
 ##' @param initial.budget initial budget
 ##' @param initial.inventory if it is an integer it specifies the
 ##' number of initial pipes, or alternatively it can be a \code{data.frame}
 ##' containing the initial inventory of pipes.
+##' @param free.expansion if \code{TRUE} costs for network expansion are not deducted from the budget.
 ##' 
 ##' @return an updated state list
 ##' 
@@ -178,23 +232,67 @@ simulate.network.period <- function(statelist,
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}.
 ##'
+##' @examples
+##' ## -----------
+##' ## define model parameters
+##' 
+##' ## Define the annual probability of a failure
+##' prob.failure.exp <- function(age, age.last.failure, n.failure) {
+##'   if(n.failure==0){
+##'     return(1/30)
+##'   } else {
+##'     return(1/10)
+##'   }
+##' }
+##' 
+##' ## define a complicated (and probably useless) rehabilitation strategy
+##' mystrategy <- . %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
+##'   replace.more.failures.than(failures=5) %>%
+##'   replace.older.than(age=70, max.cost=2e6)  %>%
+##'   replace.n.oldest(n=3) %>%
+##'   replace.n.random(n=2)
+##' ## This means: every year (if we have enough budget!), replace first the 2 pipes
+##' ## with the highest risk, then all pipes with more than 5 failures,
+##' ## then all pipes older then 70 years (up to costs of 2e6), then the 3
+##' ## oldest pipes remaining, and finally replace 2 randomly selected pipes. 
+##' 
+##' 
+##' ## -----------
+##' ## run the simulation
+##' 
+##' result <- simulate.network(n.years = 100,                   # run it for 100 years
+##'                            expansion = 10,                  # build 10 pipes per year (if money is available)
+##'                            rehabilitation = mystrategy,     # use the strategy defined above
+##'                            prob.failure = prob.failure.exp, # use the probability function defined above
+##'                            income = 1e6,                    # the annual income
+##'                            initial.budget = 1e7,   
+##'                            initial.inventory = 50,          # start the simulation with 50 new pipes
+##'                            free.expansion = FALSE)          # 
+##' 
+##' ## look at some results
+##' ## str(result)
+##' ## str(result$time.100)
+##' 
 ##' @author Andreas Scheidegger
 ##' @export
 simulate.network <- function(n.years,
                              expansion,
                              rehabilitation,
-                             failure.rate,
+                             prob.failure,
                              income=0,
                              initial.budget=Inf,
-                             initial.inventory=NULL) {
+                             initial.inventory=NULL,
+                             free.expansion=TRUE) {
 
   statelist <- initiate.network(initial.inventory, initial.budget)
   statelist <- simulate.network.period(statelist,
                                        n.years = n.years, 
                                        expansion = expansion, 
                                        rehabilitation = rehabilitation,
-                                       failure.rate=failure.rate, 
-                                       income = income)
+                                       prob.failure=prob.failure, 
+                                       income = income,
+                                       free.expansion = free.expansion)
   return(statelist)
 
 }

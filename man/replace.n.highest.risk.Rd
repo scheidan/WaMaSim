@@ -4,14 +4,14 @@
 \alias{replace.n.highest.risk}
 \title{Rehabilitation strategy: replace the \code{n} pipes with the highest risk}
 \usage{
-replace.n.highest.risk(state, n, failure.rate, max.costs = Inf)
+replace.n.highest.risk(state, n, prob.failure, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
 \item{n}{number of highest risk pipes to replace}
 
-\item{failure.rate}{failure rate function. Typically the same as passed to \code{\link{simulate.network}}.}
+\item{prob.failure}{failure rate function. Typically the same as passed to \code{\link{simulate.network}}.}
 
 \item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
@@ -28,14 +28,14 @@ and the expected failure costs.
 }
 \examples{
 ## define a strategy function that can be passed to simulate.network():
-mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs=30000)
+mystrategy <- . \%>\% replace.n.highest.risk(n=2, prob.failure=f.rate, max.costs=30000)
 
 ## or define a more complex strategy by combining multiple strategies
 ## into a prioritized sequence:
 mystrategy <- . \%>\%
   replace.more.failures.than(failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
-  replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
+  replace.n.highest.risk(n=2, prob.failure=f.rate) \%>\%
   replace.older.than(age=8) \%>\%
   replace.n.random(n=4)
 

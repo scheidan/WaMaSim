@@ -29,8 +29,11 @@ This is a minimal example of how you can run the simulation:
 ```R
 library(WaMaSim)
 
-## 1) Define the failure rate
-f.rate <- function(age, age.last.failure, n.failure) {
+## -----------
+## define model parameters
+
+## Define the annual probability of a failure
+prob.failure.exp <- function(age, age.last.failure, n.failure) {
   if(n.failure==0){
     return(1/30)
   } else {
@@ -38,47 +41,50 @@ f.rate <- function(age, age.last.failure, n.failure) {
   }
 }
 
-
-## 2) Define a complicated (and pretty useless) rehabilitation strategy
+## define a complicated (and probably useless) rehabilitation strategy
 mystrategy <- . %>%
-  replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-  replace.more.failures.than(max.failures=5) %>%
-  replace.older.than(max.age=100, max.cost=2e6)  %>%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
+  replace.more.failures.than(failures=5) %>%
+  replace.older.than(age=70, max.cost=2e6)  %>%
   replace.n.oldest(n=3) %>%
-  replace.n.random(n=4)
-## This defines a prioritized sequence of annual rehabilitation steps as follows:
-## each year, and as long as there is enough budget, replace first the 2 pipes
-## with the highest risk of failure, then all pipes with more than 5 failures,
-## then all pipes more than 100 years old, then the 3 oldest remaining pipes, and
-## finally replace 4 randomly selected pipes. Additionally, spendings on the
-## rehabilitation strategy replace.older.than can not exceed a maximum
-## budget of 2,000,000 CHF.
-
-## Or, define a "do nothing" rehabilitation strategy (i.e. repairs only, no pipe replacement):
-# mystrategy <- . %>% do.nothing
+  replace.n.random(n=2)
+## This means: every year (if we have enough budget!), replace first the 2 pipes
+## with the highest risk, then all pipes with more than 5 failures,
+## then all pipes older then 70 years (up to costs of 2e6), then the 3
+## oldest pipes remaining, and finally replace 2 randomly selected pipes.
 
 
-## 3) Run the simulation
-result <- simulate.network(t.sim=100,                  # run it for 100 years
-                           expansion=0,                # do not expand the system
-                           rehabilitation=mystrategy,  # use the strategy defined above
-                           failure.rate=f.rate,        # use the failure rate defined above
-                           income=1e6,                 # the annual income
-                           initial.budget=30e6,        # the initial budget
-                           initial.inventory=500)      # start the simulation with 500 new pipes
+## -----------
+## run the simulation
+
+result <- simulate.network(n.years = 100,                   # run it for 100 years
+                           expansion = 10,                  # build 10 pipes per year (if money is available)
+                           rehabilitation = mystrategy,     # use the strategy defined above
+                           prob.failure = prob.failure.exp, # use the probability function defined above
+                           income = 1e6,                    # the annual income
+                           initial.budget = 1e7,
+                           initial.inventory = 50,          # start the simulation with 50 new pipes
+                           free.expansion = FALSE)          #
+
+## look at some results
+str(result)
+str(result$time.100)
 
 
-## 4) View results
-str(result)                                    # a list of model states
+## -----------
+## plots
 
-# Convenient functions to extract budget or time are available
-result$time
-result$budget
+par(mfrow=c(3,1))
 
-# Calculate some statistics
-costs.per.year(result, income=1e6)
-pipes.built.per.year(result)
-failures.per.year(result)
+## budget
+plot(result$time, result$budget, type="l")
+abline(h=0, col=2)
+
+## pipes built per year
+plot(result$time, pipes.built.per.year(result))
+
+## annual costs
+plot(result$time, costs.per.year(result, income=1e6))
 ```
 
 See the package help for more information.

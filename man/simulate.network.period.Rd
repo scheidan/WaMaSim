@@ -5,7 +5,7 @@
 \title{Simulate the network for a period of time}
 \usage{
 \method{simulate}{network.period}(statelist, n.years, expansion, rehabilitation,
-  failure.rate, income = 0)
+  prob.failure, income = 0, free.expansion = TRUE)
 }
 \arguments{
 \item{statelist}{a state list}
@@ -17,10 +17,12 @@ every year to expand the pipe network, or a vector of length \code{n.years}.}
 
 \item{rehabilitation}{a (combination of) rehabilitation strategy function(s). See details below.}
 
-\item{failure.rate}{a function describing the probability of a pipe failing in the next year
+\item{prob.failure}{a function describing the probability of a pipe failing in the next year
 given its age, number of previous failures, and the age at the last failure (if any).}
 
 \item{income}{either a scalar describing the annual income, or a vector of length \code{n.years}.}
+
+\item{free.expansion}{if \code{TRUE} costs for network expansion are not deducted from the budget.}
 }
 \value{
 an updated state list
@@ -33,13 +35,64 @@ The simulation is stochastic.
 The rehabilitation is defined by combining different simple replacement strategies.
 See the example for how this can be done using the \code{mystrategy} function input.
 
-The failure behavior is defined by the function \code{failure.rate}.
+The failure behavior is defined by the function \code{prob.failure}.
 It calculates the probability of a pipe failing within the next year based on pipe age,
 pipe age at the last failure, and the number of failures. Note, the model
 makes the assumption that a pipe cannot fail more than once per year.
 
 The costs are calculated as a function of the pipe diameter, assuming all pipes have a
 length of 100 meters.
+}
+\examples{
+## -----------
+## define model parameters
+
+## Define the annual probability of a failure
+prob.failure.exp <- function(age, age.last.failure, n.failure) {
+  if(n.failure==0){
+    return(1/30)
+  } else {
+    return(1/10)
+  }
+}
+
+## define a complicated (and probably useless) rehabilitation strategy
+mystrategy <- . \%>\%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) \%>\%
+  replace.more.failures.than(failures=5) \%>\%
+  replace.older.than(age=70, max.cost=2e6)  \%>\%
+  replace.n.oldest(n=3) \%>\%
+  replace.n.random(n=2)
+## This means: every year (if we have enough budget!), replace first the 2 pipes
+## with the highest risk, then all pipes with more than 5 failures,
+## then all pipes older then 70 years (up to costs of 2e6), then the 3
+## oldest pipes remaining, and finally replace 2 randomly selected pipes. 
+
+
+## -----------
+## run the simulation in steps
+
+statelist <- initiate.network(inventory = 50, budget = 1e7)
+
+statelist <- simulate.network.period(statelist,                       # state list to update
+                                     n.years = 20,                    # run it for 20 years
+                                     expansion = 10,                  # build 10 pipes per year (if money is available)
+                                     rehabilitation = mystrategy,     # use the strategy defined above
+                                     prob.failure = prob.failure.exp, # use the probability function defined above
+                                     income = 1e6)                    # the annual income
+
+statelist <- simulate.network.period(statelist,                       # state list to update
+                                     n.years = 10,                    # run it for 10 more years
+                                     expansion = 2,                   # now, build only 2 pipes per year (if money is available)
+                                     rehabilitation = mystrategy,     # use the strategy defined above
+                                     prob.failure = prob.failure.exp, # use the probability function defined above
+                                     income = 1e6)     
+
+
+## look at some results
+## str(statelist)
+## str(statelist$time.30)
+
 }
 \seealso{
 \code{\link{simulate.network}} provides a slightly more convenient interface.

@@ -139,14 +139,14 @@ failure.cost <- function(diameter, mean=FALSE){
 ##'
 ##' @title Model failures of the network
 ##' @param state a state object
-##' @param failure.rate function returning the annual failure rate; i.e. the probability of a 
+##' @param prob.failure function returning the annual failure rate; i.e. the probability of a 
 ##' pipe failing in the current year of simulation.
-##' \code{failure.rate} must take \code{age, age.last.failure, n.failure} as input arguments.
+##' \code{prob.failure} must take \code{age, age.last.failure, n.failure} as input arguments.
 ##' Note that in the case of a pipe with zero previous failures (i.e. \code{n.failure}=0), 
 ##' \code{age.last.failure}=NA.
 ##' @return inventory with new failures
 ##' @author Andreas Scheidegger
-fail <- function(state, failure.rate){
+fail <- function(state, prob.failure){
 
   inventory <- state$inventory
   time <- state$time
@@ -157,7 +157,7 @@ fail <- function(state, failure.rate){
     # some pipes that are planned to be constructed at set times during the simulation period.
     if(inventory$time.construction[i]<time & is.na(inventory$time.end.of.service[i])){
       
-      Prob.fail <- failure.rate(age=time-inventory$time.construction[i],
+      Prob.fail <- prob.failure(age=time-inventory$time.construction[i],
                                 inventory$time.last.failure[i]-inventory$time.construction[i],
                                 inventory$n.failure[i])
    

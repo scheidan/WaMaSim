@@ -120,18 +120,15 @@ failure.cost <- function(diameter, mean=FALSE){
   
   mean.fix <- 6500
   sd.fix <- 1500
-  mean.damage <- 7+sqrt(diameter/200)
-  sd.damage <- sqrt(diameter/200)
-
-  ## reparamerisation for log-normal 
-  meanlog <- log(mean.damage) - 0.5*log(1 + (sd.damage/mean.damage)^2)
-  sdlog <- sqrt(log(1 + sd.damage^2/(mean.damage^2)))
+  mean.log.damage <- 7+sqrt(diameter/200)
+  sd.log.damage <- sqrt(diameter/200)
+  mean.damage <- exp(mean.log.damage + sd.log.damage^2/2) 
 
   if(mean){
     return(mean.fix + mean.damage)
   } else {
-    ##            repair costs               +       damage costs
-    return(max(0, rnorm(n, mean.fix, sd.fix)) + rlnorm(n, meanlog, sdlog))
+    ##            repair costs                +       damage costs
+    return(max(0, rnorm(n, mean.fix, sd.fix)) + rlnorm(n, mean.log.damage, sd.log.damage))
   }
 }
 

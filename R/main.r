@@ -209,17 +209,19 @@ simulate.network <- function(n.years,
 ##'
 ##' @examples
 ##' \dontrun{
-  ##' str(result)      # result is a 'statelist' returned from simulate.network
-      ##' result$budget    # vector of budget
-      ##' result$time      # vector of time
-      ##' result$time.22   # state list of time 22
+##' str(result)      # result is a 'statelist' returned from simulate.network
+##' result$budget    # vector of budget
+##' result$time      # vector of time
+##' result$time.22   # state list of time 22
 ##' }
 ##' @export
 `$.statelist` <- function(x, name){
   if(name %in% c("budget", "time")) {
-    sapply(x, function(y) getElement(y, name)) 
+    ret <- sapply(x, function(y) getElement(y, name))
+    names(ret) <- paste0("time.", sapply(x, function(y) getElement(y, "time")))
   } else {
-    getElement(x, name)
+    ret <- getElement(x, name)
   }
+  return(ret)
 }
 

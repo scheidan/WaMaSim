@@ -14,7 +14,7 @@ vector containing the number  of newly built pipes for each year
 }
 \description{
 The number of newly built pipes per year is calculated
-from a state list produced by \code{\link{simulate_network}}.
+from a state list produced by \code{\link{simulate.network}}.
 }
 \author{
 Andreas Scheidegger

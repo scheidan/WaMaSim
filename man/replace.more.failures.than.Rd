@@ -4,12 +4,12 @@
 \alias{replace.more.failures.than}
 \title{Rehabilitation strategy: replace pipes with too many failures}
 \usage{
-replace.more.failures.than(state, max.failures, max.costs = Inf)
+replace.more.failures.than(state, failures, max.costs = Inf)
 }
 \arguments{
 \item{state}{a state list}
 
-\item{max.failures}{maximal allowed number of failures}
+\item{failures}{maximal allowed number of failures}
 
 \item{max.costs}{maximal amount of money allowed to be spent on this strategy}
 }
@@ -27,10 +27,10 @@ mystrategy <- . \%>\% replace.more.failures.than(max.failure=3, max.costs=20000)
 ## or define a more complex strategy by combining multiple strategies
 ## into a prioritized sequence:
 mystrategy <- . \%>\%
-  replace.more.failures.than(max.failures=2) \%>\%
+  replace.more.failures.than(failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
-  replace.older.than(max.age=8) \%>\%
+  replace.older.than(age=8) \%>\%
   replace.n.random(n=4)
 
 

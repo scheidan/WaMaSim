@@ -87,24 +87,24 @@ do.nothing <- function(state){
 ##' Strategy to replace pipes older than a given age. Pipes are only
 ##' replaced if the budget remains positive.
 ##'
-##' @title Rehabilitation strategy: replace pipes older than \code{max.age}
+##' @title Rehabilitation strategy: replace pipes older than \code{age}
 ##' @param state a state list
-##' @param max.age pipes older than max.age are replaced
+##' @param age pipes older than age are replaced
 ##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate.network():
-##' mystrategy <- . %>% replace.older.than(max.age=85, max.costs=20000)
+##' mystrategy <- . %>% replace.older.than(age=85, max.costs=20000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##'   replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-##'   replace.older.than(max.age=8) %>%
+##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
 ##'
@@ -112,12 +112,12 @@ do.nothing <- function(state){
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}},
 ##' \code{\link{replace.more.failures.than}}, \code{\link{do.nothing}}
 ##' @export
-replace.older.than <- function(state, max.age, max.costs=Inf){
+replace.older.than <- function(state, age, max.costs=Inf){
   inv <- state$inventory
   
-  ## find the index of the pipes older than max.age and that are in use
-  age <- state$time - inv$time.construction
-  idx <- which((age > max.age) & inv$in.service)
+  ## find the index of the pipes older than age and that are in use
+  age.pipe <- state$time - inv$time.construction
+  idx <- which((age.pipe > age) & inv$in.service)
 
   ## build new pipes and update budget
   state <- replace.pipes(state, idx, max.costs)
@@ -132,7 +132,7 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 ##'
 ##' @title Rehabilitation strategy: replace pipes with too many failures
 ##' @param state a state list
-##' @param max.failures maximal allowed number of failures
+##' @param failures maximal allowed number of failures
 ##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
@@ -144,10 +144,10 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##'   replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-##'   replace.older.than(max.age=8) %>%
+##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
 ##'
@@ -155,11 +155,11 @@ replace.older.than <- function(state, max.age, max.costs=Inf){
 ##' \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}}, \code{\link{replace.older.than}},
 ##' \code{\link{do.nothing}}
 ##' @export
-replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
+replace.more.failures.than <- function(state, failures, max.costs=Inf){
   inv <- state$inventory
 
-  ## find the index of the pipes with more failures than max.failures and that are in use
-  idx <- which(inv$n.failure > max.failures & inv$in.service)
+  ## find the index of the pipes with more failures than failures and that are in use
+  idx <- which(inv$n.failure > failures & inv$in.service)
 
   ## build new pipes and update budget
   state <- replace.pipes(state, idx, max.costs)
@@ -186,10 +186,10 @@ replace.more.failures.than <- function(state, max.failures, max.costs=Inf){
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##'   replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-##'   replace.older.than(max.age=8) %>%
+##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
 ##' @seealso  \code{\link{replace.n.highest.risk}},
@@ -227,10 +227,10 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##'   replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-##'   replace.older.than(max.age=8) %>%
+##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
 ##' @seealso  \code{\link{replace.n.highest.risk}},
@@ -270,10 +270,10 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
-##'   replace.more.failures.than(max.failures=2) %>%
+##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
 ##'   replace.n.highest.risk(n=2, failure.rate=f.rate) %>%
-##'   replace.older.than(max.age=8) %>%
+##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
 ##' @seealso \code{\link{replace.n.oldest}}, \code{\link{replace.n.random}},

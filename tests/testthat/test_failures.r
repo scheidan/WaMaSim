@@ -57,13 +57,13 @@ state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace older than", {
 
-  s1 <- replace.older.than(state=state1, max.age=20)$inventory
+  s1 <- replace.older.than(state=state1, age=20)$inventory
   expect_equal(nrow(s1), nn)
-  s2 <- replace.older.than(state=state1, max.age=5)$inventory
+  s2 <- replace.older.than(state=state1, age=5)$inventory
   expect_equal(nrow(s2), nn+nn)
-  s3 <- replace.older.than(state=state2, max.age=5)$inventory
+  s3 <- replace.older.than(state=state2, age=5)$inventory
   expect_equal(nrow(s3), nn)
-  budget <- replace.older.than(state=state2, max.age=5)$budget
+  budget <- replace.older.than(state=state2, age=5)$budget
   expect_equal(budget, 0)
 
 })
@@ -76,13 +76,13 @@ state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace.more.failures.than", {
 
-  s1 <- replace.more.failures.than(state=state1, max.failures=2)$inventory
+  s1 <- replace.more.failures.than(state=state1, failures=2)$inventory
   expect_equal(nrow(s1), nn)
-  s2 <- replace.more.failures.than(state=state1, max.failures=0)$inventory
+  s2 <- replace.more.failures.than(state=state1, failures=0)$inventory
   expect_equal(nrow(s2), nn+nn)
-  s3 <- replace.more.failures.than(state=state2, max.failures=0)$inventory
+  s3 <- replace.more.failures.than(state=state2, failures=0)$inventory
   expect_equal(nrow(s3), nn)
-  budget <- replace.more.failures.than(state=state2, max.failures=0)$budget
+  budget <- replace.more.failures.than(state=state2, failures=0)$budget
   expect_equal(budget, 0)
 
 })

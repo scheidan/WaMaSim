@@ -33,10 +33,10 @@ mystrategy <- . \%>\% replace.n.highest.risk(n=2, failure.rate=f.rate, max.costs
 ## or define a more complex strategy by combining multiple strategies
 ## into a prioritized sequence:
 mystrategy <- . \%>\%
-  replace.more.failures.than(max.failures=2) \%>\%
+  replace.more.failures.than(failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
   replace.n.highest.risk(n=2, failure.rate=f.rate) \%>\%
-  replace.older.than(max.age=8) \%>\%
+  replace.older.than(age=8) \%>\%
   replace.n.random(n=4)
 
 }

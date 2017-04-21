@@ -10,7 +10,7 @@ pipes.built.per.year(statelist)
 \item{statelist}{a state list}
 }
 \value{
-vector containing the number  of newly built pipes for each year
+vector containing the number of newly built pipes for each year
 }
 \description{
 The number of newly built pipes per year is calculated

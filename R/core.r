@@ -154,7 +154,8 @@ fail <- function(state, prob.failure){
   
   for(i in seq_len(nrow(inventory))){
     ## checking time.const<time allows WaMaSim to be run on an initial inventory that includes
-    ## some pipes that are planned to be constructed at set times during the simulation period. AS: this is a dirty hack!
+    ## some pipes that are planned to be constructed at set times during the simulation period.
+    ## AS: this is a somethat dirty hack!
     if(inventory$time.construction[i]<time & is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- prob.failure(age=time-inventory$time.construction[i],
@@ -183,7 +184,7 @@ fail <- function(state, prob.failure){
 ##' @return vector containing the number of failures per year
 ##' @author Andreas Scheidegger
 ##' @export
-failures.per.year <- function(statelist) {
+failures.per.year <- function(statelist){
   sapply(statelist, function(x) sum(x$inventory$time.last.failure == x$time, na.rm=TRUE))
 }
 
@@ -193,11 +194,22 @@ failures.per.year <- function(statelist) {
 ##'
 ##' @title Calculate number of newly built pipes for each year
 ##' @param statelist a state list
-##' @return vector containing the number  of newly built pipes for each year
+##' @return vector containing the number of newly built pipes for each year
 ##' @author Andreas Scheidegger
 ##' @export
-pipes.built.per.year <- function(statelist) {
+pipes.built.per.year <- function(statelist){
   sapply(statelist, function(x) sum(x$inventory$time.construction == x$time, na.rm=TRUE))
+}
+
+
+
+##' @title Returns the number of pipes in service for each year
+##' @param statelist a state list
+##' @return vector containing the number of pipes in service
+##' @author Andreas Scheidegger
+##' @export
+pipes.inservice.per.year <- function(statelist){
+  sapply(statelist, function(x) sum(x$inventory$in.service))
 }
 
 
@@ -211,7 +223,7 @@ pipes.built.per.year <- function(statelist) {
 ##' @return a vector of the total cost per year
 ##' @author Andreas Scheidegger
 ##' @export
-costs.per.year <- function(statelist, income) {
+costs.per.year <- function(statelist, income){
   if(length(income)==1) income <- rep(income, length(statelist)-1)
   c(0, income - diff(statelist$budget))
 }

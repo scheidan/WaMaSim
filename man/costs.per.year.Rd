@@ -10,7 +10,7 @@ costs.per.year(statelist, income)
 \item{statelist}{a state list}
 
 \item{income}{the same values as passed to
-\code{simulate.network}. Either a scalar or vector.}
+\code{simulate_network}. Either a scalar or vector.}
 }
 \value{
 a vector of the total cost per year

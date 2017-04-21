@@ -12,6 +12,10 @@ pipes.inservice.per.year(statelist)
 \value{
 vector containing the number of pipes in service
 }
+\description{
+The number of pipes in service is calculated for every year
+based on a state list produced by \code{\link{simulate_network}}.
+}
 \author{
 Andreas Scheidegger
 }

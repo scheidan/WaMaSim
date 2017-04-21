@@ -17,7 +17,7 @@ containing the initial inventory of pipes.}
 a state list
 }
 \description{
-Creates the initial network that can be used with \code{\link{simulate.network}}.
+Creates the initial network that can be used with \code{\link{simulate_network}}.
 }
 \author{
 Andreas Scheidegger

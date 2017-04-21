@@ -14,7 +14,7 @@ vector containing the number of failures per year
 }
 \description{
 The number of failures per year is calculated
-from a state list produced by \code{\link{simulate.network}}.
+from a state list produced by \code{\link{simulate_network}}.
 }
 \author{
 Andreas Scheidegger

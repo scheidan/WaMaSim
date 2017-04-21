@@ -57,7 +57,7 @@ mystrategy <- . %>%
 ## -----------
 ## run the simulation
 
-result <- simulate.network(n.years = 100,                   # run it for 100 years
+result <- simulate_network(n.years = 100,                   # run it for 100 years
                            expansion = 10,                  # build 10 pipes per year (if money is available)
                            rehabilitation = mystrategy,     # use the strategy defined above
                            prob.failure = prob.failure.exp, # use the probability function defined above

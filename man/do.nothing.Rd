@@ -16,7 +16,7 @@ a state list
 Dummy strategy to model no rehabilitation at all.
 }
 \examples{
-## define a strategy function that can be passed to simulate.network():
+## define a strategy function that can be passed to simulate_network():
 mystrategy <- . \%>\% do.nothing
 
 }

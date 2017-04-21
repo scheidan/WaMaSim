@@ -75,7 +75,7 @@ replace.pipes <- function(state, idx, max.costs){
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% do.nothing
 ##'
 ##' @seealso  \code{\link{replace.n.highest.risk}},
@@ -99,7 +99,7 @@ do.nothing <- function(state){
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% replace.older.than(age=85, max.costs=20000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
@@ -142,7 +142,7 @@ replace.older.than <- function(state, age, max.costs=Inf){
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% replace.more.failures.than(max.failure=3, max.costs=20000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
@@ -184,7 +184,7 @@ replace.more.failures.than <- function(state, failures, max.costs=Inf){
 ##' @author Andreas Scheidegger
 ##' 
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% replace.n.oldest(n=10)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
@@ -225,7 +225,7 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% replace.n.random(n=10)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
@@ -262,13 +262,13 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' @title Rehabilitation strategy: replace the \code{n} pipes with the highest risk
 ##' @param state a state list
 ##' @param n number of highest risk pipes to replace
-##' @param prob.failure failure rate function. Typically the same as passed to \code{\link{simulate.network}}.
+##' @param prob.failure failure rate function. Typically the same as passed to \code{\link{simulate_network}}.
 ##' @param max.costs maximal amount of money allowed to be spent on this strategy
 ##' @return a state list
 ##' @author Andreas Scheidegger
 ##'
 ##' @examples
-##' ## define a strategy function that can be passed to simulate.network():
+##' ## define a strategy function that can be passed to simulate_network():
 ##' mystrategy <- . %>% replace.n.highest.risk(n=2, prob.failure=f.rate, max.costs=30000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies

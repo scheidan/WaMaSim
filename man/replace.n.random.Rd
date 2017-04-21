@@ -21,7 +21,7 @@ Replace a certain number of randomly chosen pipes. Pipes are only
 replaced if the budget remains positive.
 }
 \examples{
-## define a strategy function that can be passed to simulate.network():
+## define a strategy function that can be passed to simulate_network():
 mystrategy <- . \%>\% replace.n.random(n=10)
 
 ## or define a more complex strategy by combining multiple strategies

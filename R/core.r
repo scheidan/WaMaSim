@@ -155,7 +155,7 @@ fail <- function(state, prob.failure){
   for(i in seq_len(nrow(inventory))){
     ## checking time.const<time allows WaMaSim to be run on an initial inventory that includes
     ## some pipes that are planned to be constructed at set times during the simulation period.
-    ## AS: this is a somethat dirty hack!
+    ## AS: this is a somewhat dirty hack!
     if(inventory$time.construction[i]<time & is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- prob.failure(age=time-inventory$time.construction[i],
@@ -177,7 +177,7 @@ fail <- function(state, prob.failure){
 
 
 ##' The number of failures per year is calculated
-##' from a state list produced by \code{\link{simulate.network}}.
+##' from a state list produced by \code{\link{simulate_network}}.
 ##'
 ##' @title Calculate number of failures per year
 ##' @param statelist a state list
@@ -190,7 +190,7 @@ failures.per.year <- function(statelist){
 
 
 ##' The number of newly built pipes per year is calculated
-##' from a state list produced by \code{\link{simulate.network}}.
+##' from a state list produced by \code{\link{simulate_network}}.
 ##'
 ##' @title Calculate number of newly built pipes for each year
 ##' @param statelist a state list
@@ -202,7 +202,9 @@ pipes.built.per.year <- function(statelist){
 }
 
 
-
+##' The number of pipes in service is calculated for every year
+##' based on a state list produced by \code{\link{simulate_network}}.
+##' 
 ##' @title Returns the number of pipes in service for each year
 ##' @param statelist a state list
 ##' @return vector containing the number of pipes in service
@@ -219,7 +221,7 @@ pipes.inservice.per.year <- function(statelist){
 ##' @title Calculate the total costs per year
 ##' @param statelist a state list
 ##' @param income the same values as passed to
-##' \code{simulate.network}. Either a scalar or vector.
+##' \code{simulate_network}. Either a scalar or vector.
 ##' @return a vector of the total cost per year
 ##' @author Andreas Scheidegger
 ##' @export

@@ -26,9 +26,9 @@ test_that("expanded inventory is correct", {
 
 state.exp$time <- state.exp$time + 1
 
-f.rate.test <- function(age, age.last.failure, n.failure) 1 # fails always
+prob.failure.test <- function(age, age.last.failure, n.failure) 1 # fails always
 
-state.failed <- fail(state.exp, f.rate.test)
+state.failed <- fail(state.exp, prob.failure.test)
 test_that("failed inventory is correct", {
   expect_true( all(c("data.frame", "inventory") %in% class(state.failed$inventory)) )
   expect_false( any(is.na(state.failed$inventory$time.last.failure)) )
@@ -130,13 +130,13 @@ state2 <- list(inventory=inv.failed, budget=0, time=10)
 
 test_that("replace highest risk", {
 
-  s1 <- replace.n.highest.risk(state=state1, n=Inf, f.rate.test)$inventory
+  s1 <- replace.n.highest.risk(state=state1, n=Inf, prob.failure.test)$inventory
   expect_equal(nrow(s1), nn+nn)
-  s2 <- replace.n.highest.risk(state=state1, n=3, f.rate.test)$inventory
+  s2 <- replace.n.highest.risk(state=state1, n=3, prob.failure.test)$inventory
   expect_equal(nrow(s2), nn+3)
-  s3 <- replace.n.highest.risk(state=state2, n=Inf, f.rate.test)$inventory
+  s3 <- replace.n.highest.risk(state=state2, n=Inf, prob.failure.test)$inventory
   expect_equal(nrow(s3), nn)
-  budget <- replace.n.highest.risk(state=state2, n=Inf, f.rate.test)$budget
+  budget <- replace.n.highest.risk(state=state2, n=Inf, prob.failure.test)$budget
   expect_equal(budget, 0)
 
 })

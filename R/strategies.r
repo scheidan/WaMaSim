@@ -107,7 +107,7 @@ do.nothing <- function(state){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -150,7 +150,7 @@ replace.older.than <- function(state, age, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -192,7 +192,7 @@ replace.more.failures.than <- function(state, failures, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -233,7 +233,7 @@ replace.n.oldest <- function(state, n, max.costs=Inf){
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'
@@ -269,14 +269,14 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##'
 ##' @examples
 ##' ## define a strategy function that can be passed to simulate_network():
-##' mystrategy <- . %>% replace.n.highest.risk(n=2, prob.failure=f.rate, max.costs=30000)
+##' mystrategy <- . %>% replace.n.highest.risk(n=2, prob.failure=prob.failure.exp, max.costs=30000)
 ##'
 ##' ## or define a more complex strategy by combining multiple strategies
 ##' ## into a prioritized sequence:
 ##' mystrategy <- . %>%
 ##'   replace.more.failures.than(failures=2) %>%
 ##'   replace.n.oldest(n=3) %>%
-##'   replace.n.highest.risk(n=2, prob.failure=f.rate) %>%
+##'   replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %>%
 ##'   replace.older.than(age=8) %>%
 ##'   replace.n.random(n=4)
 ##'

@@ -28,14 +28,14 @@ and the expected failure costs.
 }
 \examples{
 ## define a strategy function that can be passed to simulate_network():
-mystrategy <- . \%>\% replace.n.highest.risk(n=2, prob.failure=f.rate, max.costs=30000)
+mystrategy <- . \%>\% replace.n.highest.risk(n=2, prob.failure=prob.failure.exp, max.costs=30000)
 
 ## or define a more complex strategy by combining multiple strategies
 ## into a prioritized sequence:
 mystrategy <- . \%>\%
   replace.more.failures.than(failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
-  replace.n.highest.risk(n=2, prob.failure=f.rate) \%>\%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) \%>\%
   replace.older.than(age=8) \%>\%
   replace.n.random(n=4)
 

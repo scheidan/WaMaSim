@@ -32,10 +32,8 @@ make.empty.inventory <- function() {
 ##' @return a vector of diameters
 ##' @author Andreas Scheidegger
 sample.diameter <- function(n=1){
-  diam <- c(80, 100, 125, 150, 180,
-            200, 250, 300, 400, 500)
-  freq <- c(293, 503, 661, 2431, 17,
-            698, 84, 265, 24, 23)
+  diam <- c(80, 100, 125, 150, 180, 200, 250, 300, 400, 500)
+  freq <- c(293, 503, 661, 2431, 17, 698, 84, 265, 24, 23)
 
   sample(x=diam, n, replace=TRUE, prob=freq)
 }

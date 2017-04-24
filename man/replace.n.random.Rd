@@ -29,7 +29,7 @@ mystrategy <- . \%>\% replace.n.random(n=10)
 mystrategy <- . \%>\%
   replace.more.failures.than(failures=2) \%>\%
   replace.n.oldest(n=3) \%>\%
-  replace.n.highest.risk(n=2, prob.failure=f.rate) \%>\%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) \%>\%
   replace.older.than(age=8) \%>\%
   replace.n.random(n=4)
 

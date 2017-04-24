@@ -99,11 +99,11 @@ initiate.network <- function(inventory=0,
 ##' 
 ##' ## Define the annual probability of a failure
 ##' prob.failure.exp <- function(age, age.last.failure, n.failure) {
-  ##'   if(n.failure==0){
-          ##'     return(1/30)
-        ##'   } else {
-                ##'     return(1/10)
-              ##'   }
+##'   if(n.failure==0){
+##'     return(1/30)
+##'   } else {
+##'     return(1/10)
+##'   }
 ##' }
 ##' 
 ##' ## define a complicated (and probably useless) rehabilitation strategy
@@ -125,18 +125,18 @@ initiate.network <- function(inventory=0,
 ##' statelist <- initiate.network(inventory = 50, budget = 1e7)
 ##' 
 ##' statelist <- simulate_network.period(statelist,                       # state list to update
-                                         ##'                                      n.years = 20,                    # run it for 20 years
-                                         ##'                                      expansion = 10,                  # build 10 pipes per year (if money is available)
-                                         ##'                                      rehabilitation = mystrategy,     # use the strategy defined above
-                                         ##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
-                                         ##'                                      income = 1e6)                    # the annual income
+##'                                      n.years = 20,                    # run it for 20 years
+##'                                      expansion = 10,                  # build 10 pipes per year (if money is available)
+##'                                      rehabilitation = mystrategy,     # use the strategy defined above
+##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
+##'                                      income = 1e6)                    # the annual income
 ##' 
 ##' statelist <- simulate_network.period(statelist,                       # state list to update
-                                         ##'                                      n.years = 10,                    # run it for 10 more years
-                                         ##'                                      expansion = 2,                   # now, build only 2 pipes per year (if money is available)
-                                         ##'                                      rehabilitation = mystrategy,     # use the strategy defined above
-                                         ##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
-                                         ##'                                      income = 1e6)     
+##'                                      n.years = 10,                    # run it for 10 more years
+##'                                      expansion = 2,                   # now, build only 2 pipes per year (if money is available)
+##'                                      rehabilitation = mystrategy,     # use the strategy defined above
+##'                                      prob.failure = prob.failure.exp, # use the probability function defined above
+##'                                      income = 1e6)     
 ##' 
 ##' 
 ##' ## look at some results
@@ -238,11 +238,11 @@ simulate_network.period <- function(statelist,
 ##' 
 ##' ## Define the annual probability of a failure
 ##' prob.failure.exp <- function(age, age.last.failure, n.failure) {
-  ##'   if(n.failure==0){
-          ##'     return(1/30)
-        ##'   } else {
-                ##'     return(1/10)
-              ##'   }
+##'   if(n.failure==0){
+##'     return(1/30)
+##'   } else {
+##'     return(1/10)
+##'   }
 ##' }
 ##' 
 ##' ## define a complicated (and probably useless) rehabilitation strategy
@@ -262,13 +262,13 @@ simulate_network.period <- function(statelist,
 ##' ## run the simulation
 ##' 
 ##' result <- simulate_network(n.years = 100,                   # run it for 100 years
-                               ##'                            expansion = 10,                  # build 10 pipes per year (if money is available)
-                               ##'                            rehabilitation = mystrategy,     # use the strategy defined above
-                               ##'                            prob.failure = prob.failure.exp, # use the probability function defined above
-                               ##'                            income = 1e6,                    # the annual income
-                               ##'                            initial.budget = 1e7,   
-                               ##'                            initial.inventory = 50,          # start the simulation with 50 new pipes
-                               ##'                            free.expansion = FALSE)          # 
+##'                            expansion = 10,                  # build 10 pipes per year (if money is available)
+##'                            rehabilitation = mystrategy,     # use the strategy defined above
+##'                            prob.failure = prob.failure.exp, # use the probability function defined above
+##'                            income = 1e6,                    # the annual income
+##'                            initial.budget = 1e7,   
+##'                            initial.inventory = 50,          # start the simulation with 50 new pipes
+##'                            free.expansion = FALSE)          # 
 ##' 
 ##' ## look at some results
 ##' ## str(result)
@@ -307,10 +307,10 @@ simulate_network <- function(n.years,
 ##'
 ##' @examples
 ##' \dontrun{
-  ##' str(result)      # result is a 'statelist' returned from simulate_network
-      ##' result$budget    # vector of budget
-      ##' result$time      # vector of time
-      ##' result$time.22   # state list of time 22
+##' str(result)      # result is a 'statelist' returned from simulate_network
+##' result$budget    # vector of budget
+##' result$time      # vector of time
+##' result$time.22   # state list of time 22
 ##' }
 ##' @export
 `$.statelist` <- function(x, name){

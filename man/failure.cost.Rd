@@ -16,7 +16,7 @@ if \code{mean=FALSE}, the failure costs [CHF] are sampled
 randomly. If \code{mean=TRUE}, the expected average costs are returned.
 }
 \description{
-Calculate the costs caused by a failure according to Section 5.1 in
+Calculate the costs caused by a failure according to Section 7.1 in
 "The Water Network Management Challenge", Max Maurer 2017.
 }
 \author{

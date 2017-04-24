@@ -39,7 +39,7 @@ sample.diameter <- function(n=1){
 }
 
 
-##' Based on Eq(1) of "The Water Network Management Challenge, Max Maurer 2017",
+##' Based on Eq(14) of "The Water Network Management Challenge, Max Maurer 2017",
 ##' assuming a pipe length of 100m.
 ##' 
 ##' @title Calculate replacement value  
@@ -104,7 +104,7 @@ expand <- function(state, n.new, separate.budget=FALSE){
 }
 
 
-##' Calculate the costs caused by a failure according to Section 5.1 in
+##' Calculate the costs caused by a failure according to Section 7.1 in
 ##' "The Water Network Management Challenge", Max Maurer 2017.
 ##' 
 ##' @title Calculate the (random) cost of a failure

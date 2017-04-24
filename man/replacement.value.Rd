@@ -13,7 +13,7 @@ replacement.value(diameter)
 replacement value [CHF]
 }
 \description{
-Based on Eq(1) of "The Water Network Management Challenge, Max Maurer 2017",
+Based on Eq(14) of "The Water Network Management Challenge, Max Maurer 2017",
 assuming a pipe length of 100m.
 }
 \author{

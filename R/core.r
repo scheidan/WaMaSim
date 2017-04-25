@@ -151,10 +151,7 @@ fail <- function(state, prob.failure){
   budget <- state$budget
   
   for(i in seq_len(nrow(inventory))){
-    ## checking time.const<time allows WaMaSim to be run on an initial inventory that includes
-    ## some pipes that are planned to be constructed at set times during the simulation period.
-    ## AS: this is a somewhat dirty hack!
-    if(inventory$time.construction[i]<time & is.na(inventory$time.end.of.service[i])){
+    if(is.na(inventory$time.end.of.service[i])){
       
       Prob.fail <- prob.failure(age=time-inventory$time.construction[i],
                                 inventory$time.last.failure[i]-inventory$time.construction[i],

@@ -289,7 +289,7 @@ replace.n.highest.risk <- function(state, n, prob.failure, max.costs=Inf){
 
   ## calculate risk (for the pipes in use)
   risk <- rep(NA, nrow(inv))
-  for(i in which(inv$time.construction<state$time & inv$in.service)){
+  for(i in which(inv$in.service)){
     
     Prob.fail <- prob.failure(age=state$time-inv$time.construction[i],
                               inv$time.last.failure[i]-inv$time.construction[i],

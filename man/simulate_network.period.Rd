@@ -13,7 +13,8 @@ simulate_network.period(statelist, n.years, expansion, rehabilitation,
 \item{n.years}{number of years to simulate}
 
 \item{expansion}{either a scalar describing the number of pipes added
-every year to expand the pipe network, or a vector of length \code{n.years}.}
+every year to expand the pipe network, or a vector of length \code{n.years}.
+Negative values are not allowed.}
 
 \item{rehabilitation}{a (combination of) rehabilitation strategy function(s). See details below.}
 

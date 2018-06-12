@@ -8,7 +8,7 @@
 
 library(WaMaSim)
 
-
+## ---------------------------------
 context("core functionality")
 
 empty.inv <- make.empty.inventory()
@@ -35,7 +35,7 @@ test_that("failed inventory is correct", {
   expect_true( all(state.failed$inventory$n.failure > 0) )
 })
 
-
+## ---------------------------------
 context("strategies")
 
 inv.failed <- state.failed$inventory
@@ -138,5 +138,34 @@ test_that("replace highest risk", {
   expect_equal(nrow(s3), nn)
   budget <- replace.n.highest.risk(state=state2, n=Inf, prob.failure.test)$budget
   expect_equal(budget, 0)
+
+})
+
+
+## ---------------------------------
+context("main")
+
+prob.failure <- function(age, age.last.failure, n.failure) 0 # no failures
+
+strategy <- . %>% do.nothing()
+
+test_that("Interface", {
+    expect_error(simulate_network(n.years=10,
+                                  expansion=-1,# negative expansion
+                                  rehabilitation = strategy,
+                                  prob.failure=prob.failure,
+                                  income=0,
+                                  initial.budget = 1e7,
+                                  initial.inventory = 20,
+                                  free.expansion = TRUE))
+
+    expect_error(simulate_network(n.years=10,
+                                  expansion=c(rep(2, 9), -1), # negative expansion
+                                  rehabilitation = strategy,
+                                  prob.failure=prob.failure,
+                                  income=0,
+                                  initial.budget = 1e7,
+                                  initial.inventory = 20,
+                                  free.expansion = TRUE))
 
 })

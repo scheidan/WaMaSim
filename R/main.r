@@ -98,6 +98,7 @@ initiate.network <- function(inventory=0,
 ##' @param n.years number of years to simulate
 ##' @param expansion either a scalar describing the number of pipes added
 ##' every year to expand the pipe network, or a vector of length \code{n.years}.
+##' Negative values are not allowed.
 ##' @param rehabilitation a (combination of) rehabilitation strategy function(s). See details below.
 ##' @param prob.failure a function describing the probability of a pipe failing in the next year
 ##' given its age, number of previous failures, and the age at the last failure (if any).
@@ -169,42 +170,43 @@ simulate_network.period <- function(statelist,
   last.year <- statelist[[length(statelist)]]$time
   state <- statelist[[length(statelist)]]
 
-  if(length(expansion)==1) expansion <- rep(expansion, n.years)
-  if(length(income)==1) income <- rep(income, n.years)
-  if(length(expansion)!=n.years) stop("`expansion` must be of length one or `n.years`!")
-  if(length(income)!=n.years) stop("`income` must be of length one or `n.years`!")
-  
-  ## loop over time
-  i <- 1
-  for(t in (last.year+1):(last.year+n.years)){
-    if(t%%10==0){
-      print(paste("Simulate year", t))
-    }
+    if(any(expansion<0)) stop("Negative values for `expansion` are not allowed!")
+    if(length(expansion)==1) expansion <- rep(expansion, n.years)
+    if(length(income)==1) income <- rep(income, n.years)
+    if(length(expansion)!=n.years) stop("`expansion` must be of length one or `n.years`!")
+    if(length(income)!=n.years) stop("`income` must be of length one or `n.years`!")
     
-    ## 0) update time
-    state$time <- state$time + 1
+    ## loop over time
+    i <- 1
+    for(t in (last.year+1):(last.year+n.years)){
+        if(t%%10==0){
+            print(paste("Simulate year", t))
+        }
+        
+        ## 0) update time
+        state$time <- state$time + 1
 
-    ## 1) expand system
-    state <- expand(state, expansion[i],
-                    separate.budget=free.expansion)
+        ## 1) expand system
+        state <- expand(state, expansion[i],
+                        separate.budget=free.expansion)
 
-    ## 2) collect fees
-    state$budget <- state$budget + income[i]
+        ## 2) collect fees
+        state$budget <- state$budget + income[i]
 
-    ## 3) simulate failures
-    state <- fail(state, prob.failure)
+        ## 3) simulate failures
+        state <- fail(state, prob.failure)
 
-    ## 4) rehabilitate pipes
-    state <- rehabilitation(state)
+        ## 4) rehabilitate pipes
+        state <- rehabilitation(state)
 
-    statelist[[t+1]] <- state
-    names(statelist)[t+1] <- paste0("time.", t)
+        statelist[[t+1]] <- state
+        names(statelist)[t+1] <- paste0("time.", t)
 
-    i <- i+1
-  }
+        i <- i+1
+    }
 
-  class(statelist) <- "statelist"
-  return(statelist)
+    class(statelist) <- "statelist"
+    return(statelist)
 
 }
 
@@ -228,6 +230,7 @@ simulate_network.period <- function(statelist,
 ##' @param n.years number of years to simulate
 ##' @param expansion either a scalar describing the number of pipes added
 ##' every year to expand the pipe network, or a vector of length \code{n.years}.
+##' Negative values are not allowed.
 ##' @param rehabilitation a (combination of) rehabilitation strategy function(s). See details below.
 ##' @param prob.failure a function describing the probability of a pipe failing in the next year
 ##' given its age, number of previous failures, and the age at the last failure (if any).

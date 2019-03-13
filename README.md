@@ -105,7 +105,7 @@ load_all(package.path)
 
 ## run tests
 test(package.path)            # this runs the tests in the `test` folder of the package
-test_coverage(pkg.path)       # needs package 'covr' to be installed
+test_coverage(package.path)       # needs package 'covr' to be installed
 
 ## build documentation (uses Roxygen2)
 document(package.path)

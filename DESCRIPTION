@@ -1,12 +1,15 @@
 Package: WaMaSim
 Type: Package
-Title:  Simulate rehabilitation strategies for water distribution systems
+Title: Simulate rehabilitation strategies for water distribution systems
 Version: 0.1.2
-Date: 2018-02-25
+Date: 2019-03-13
 Author: Andreas Scheidegger, Rachel Barrett
-Maintainer:  <andreas.scheidegger@eawag.ch>
-Description: This is a teaching tool for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
+Maintainer: Christian Förster <christian.foerster@eawag.ch>
+Description: This is a teaching tool for the Water Infrastructure Experimental 
+   and Computer Laboratory at ETH Zurich, Switzerland.
+URL: https://github.com/scheidan/WaMaSim
+BugReports: https://github.com/scheidan/WaMaSim/issues
 License: GPL-3
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Depends: magrittr (>= 1.5)
 Suggests: testthat

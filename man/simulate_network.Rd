@@ -4,8 +4,9 @@
 \alias{simulate_network}
 \title{Simulate the failures, expansion, rehabilitation, and costs of a network}
 \usage{
-simulate_network(n.years, expansion, rehabilitation, prob.failure, income = 0,
-  initial.budget = Inf, initial.inventory = NULL, free.expansion = TRUE)
+simulate_network(n.years, expansion, rehabilitation, prob.failure,
+  income = 0, initial.budget = Inf, initial.inventory = NULL,
+  free.expansion = TRUE)
 }
 \arguments{
 \item{n.years}{number of years to simulate}

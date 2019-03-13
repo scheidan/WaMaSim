@@ -105,13 +105,15 @@ load_all(package.path)
 
 ## run tests
 test(package.path)            # this runs the tests in the `test` folder of the package
+test_coverage(pkg.path)       # needs package 'covr' to be installed
 
 ## build documentation (uses Roxygen2)
 document(package.path)
 
-## run R CMD check
-check(package.path)
+## run R CMD checks
+check(package.path, cran=TRUE, manual=TRUE)
 
-# build_win(package.path)     # optional, test build on an online windows instance
+## build package for CRAN submission
+build(pkg=package.path)
 
 ```

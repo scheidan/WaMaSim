@@ -3,11 +3,14 @@ Type: Package
 Title: Simulate rehabilitation strategies for water distribution systems
 Version: 0.1.2
 Date: 2019-03-13
-Authors@R: c(
+Authors: c(
     person("Andreas", "Scheidegger", email="andreas.scheidegger@eawag.ch", role="aut"),
     person("Rachel", "Barrett", email=NULL, role="aut"),
-    person("Christian", "Förster", email="christian.foerster@eawag.ch", role="cre")
+    person("Christian", "Foerster", email="christian.foerster@eawag.ch", role="cre")
   )
+Author: Andreas, Scheidegger [aut],
+  Rachel, Barrett [aut]
+Maintainer: Christian, Foerster <Christian.Foerster@eawag.ch>
 Description: This is a teaching tool for the Water Infrastructure Experimental 
    and Computer Laboratory at ETH Zurich, Switzerland.
 Encoding: UTF-8

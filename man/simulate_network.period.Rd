@@ -75,19 +75,27 @@ mystrategy <- . \%>\%
 
 statelist <- initiate.network(inventory = 50, budget = 1e7)
 
-statelist <- simulate_network.period(statelist,                       # state list to update
-                                     n.years = 20,                    # run it for 20 years
-                                     expansion = 10,                  # build 10 pipes per year (if money is available)
-                                     rehabilitation = mystrategy,     # use the strategy defined above
-                                     prob.failure = prob.failure.exp, # use the probability function defined above
-                                     income = 1e6)                    # the annual income
+statelist <- simulate_network.period(
 
-statelist <- simulate_network.period(statelist,                       # state list to update
-                                     n.years = 10,                    # run it for 10 more years
-                                     expansion = 2,                   # now, build only 2 pipes per year (if money is available)
-                                     rehabilitation = mystrategy,     # use the strategy defined above
-                                     prob.failure = prob.failure.exp, # use the probability function defined above
-                                     income = 1e6)     
+   statelist,                       # state list to update
+   n.years = 20,                    # run it for 20 years
+   expansion = 10,                  # build 10 pipes per year (if money is available)
+   rehabilitation = mystrategy,     # use the strategy defined above
+   prob.failure = prob.failure.exp, # use the probability function defined above
+   income = 1e6                     # the annual income
+                 
+   )                    
+
+statelist <- simulate_network.period(
+   
+   statelist,                       # state list to update
+   n.years = 10,                    # run it for 10 more years
+   expansion = 2,                   # now, build only 2 pipes per year (if money is available)
+   rehabilitation = mystrategy,     # use the strategy defined above
+   prob.failure = prob.failure.exp, # use the probability function defined above
+   income = 1e6                     # the annual income
+                 
+   )     
 
 
 ## look at some results

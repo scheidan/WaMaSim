@@ -216,23 +216,21 @@ replace.more.failures.than <- function(state, failures, max.costs=Inf){
 ##' @export
 replace.n.oldest <- function(state, n, max.costs=Inf){
   
-  if (n == 0){
-    
-    return(state)
-    
-  }else{
+  if(n == 0){
+      return(state)
+  } else {
   
-    inv <- state$inventory
+      inv <- state$inventory
 
-    ## find the index of the n oldest pipes that are in use
-    n.in.service <- sum(inv$in.service)
-    idx <- order(inv$time.construction + as.numeric(!inv$in.service)*1E10)[1:(min(n, n.in.service))]
+      ## find the index of the n oldest pipes that are in use
+      n.in.service <- sum(inv$in.service)
+      idx <- order(inv$time.construction + as.numeric(!inv$in.service)*1E10)[1:(min(n, n.in.service))]
 
-    ## build new pipes and update budget
-    state <- replace.pipes(state, idx, max.costs)
+      ## build new pipes and update budget
+      state <- replace.pipes(state, idx, max.costs)
 
-    return(state)
-    }
+      return(state)
+  }
 }
 
 
@@ -308,32 +306,30 @@ replace.n.random <- function(state, n, max.costs=Inf){
 ##' @export
 replace.n.highest.risk <- function(state, n, prob.failure, max.costs=Inf){
   
-  if (n == 0){
-    
-    return(state)
-    
-  }else{
+  if(n == 0){
+      return(state)
+  } else {
   
-    inv <- state$inventory
+      inv <- state$inventory
 
-    ## calculate risk (for the pipes in use)
-    risk <- rep(NA, nrow(inv))
-    for(i in which(inv$in.service)){
+      ## calculate risk (for the pipes in use)
+      risk <- rep(NA, nrow(inv))
+      for(i in which(inv$in.service)){
 
-      Prob.fail <- prob.failure(age=state$time-inv$time.construction[i],
-                                inv$time.last.failure[i]-inv$time.construction[i],
-                                inv$n.failure[i])
+          Prob.fail <- prob.failure(age=state$time-inv$time.construction[i],
+                                    inv$time.last.failure[i]-inv$time.construction[i],
+                                    inv$n.failure[i])
 
-      expected.failure.cost <- failure.cost(inv$diameter[i], mean=TRUE)
+          expected.failure.cost <- failure.cost(inv$diameter[i], mean=TRUE)
 
-      risk[i] <- Prob.fail * expected.failure.cost
-    } 
+          risk[i] <- Prob.fail * expected.failure.cost
+      } 
 
-    idx <- order(risk, decreasing=TRUE)[1:min(n,sum(inv$in.service))]
+      idx <- order(risk, decreasing=TRUE)[1:min(n,sum(inv$in.service))]
 
-    ## build new pipes and update budget
-    state <- replace.pipes(state, idx, max.costs)
+      ## build new pipes and update budget
+      state <- replace.pipes(state, idx, max.costs)
 
-    return(state)
-    }
+      return(state)
+  }
 }

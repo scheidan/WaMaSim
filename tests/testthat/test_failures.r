@@ -100,6 +100,8 @@ test_that("replace oldest", {
   expect_equal(nrow(s2), nn+3)
   s3 <- replace.n.oldest(state=state2, n=Inf)$inventory
   expect_equal(nrow(s3), nn)
+  s4 <- replace.n.oldest(state=state1, n=0)$inventory
+  expect_equal(nrow(s4), nn)
   budget <- replace.n.oldest(state=state2, n=Inf)$budget
   expect_equal(budget, 0)
 
@@ -118,6 +120,8 @@ test_that("replace randomly", {
   expect_equal(nrow(s2), nn+3)
   s3 <- replace.n.random(state=state2, n=Inf)$inventory
   expect_equal(nrow(s3), nn)
+  s4 <- replace.n.random(state=state1, n=0)$inventory
+  expect_equal(nrow(s4), nn)
   budget <- replace.n.random(state=state2, n=Inf)$budget
   expect_equal(budget, 0)
 
@@ -136,6 +140,8 @@ test_that("replace highest risk", {
   expect_equal(nrow(s2), nn+3)
   s3 <- replace.n.highest.risk(state=state2, n=Inf, prob.failure.test)$inventory
   expect_equal(nrow(s3), nn)
+  s4 <- replace.n.highest.risk(state=state1, n=0)$inventory
+  expect_equal(nrow(s4), nn)
   budget <- replace.n.highest.risk(state=state2, n=Inf, prob.failure.test)$budget
   expect_equal(budget, 0)
 

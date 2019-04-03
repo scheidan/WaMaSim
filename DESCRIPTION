@@ -1,9 +1,9 @@
 Package: WaMaSim
 Type: Package
 Title: Simulate rehabilitation strategies for water distribution systems
-Version: 0.1.2
+Version: 1.0.0
 Date: 2019-03-13
-Authors: c(
+Authors@R: c(
     person("Andreas", "Scheidegger", email="andreas.scheidegger@eawag.ch", role="aut"),
     person("Rachel", "Barrett", email=NULL, role="aut"),
     person("Christian", "Foerster", email="christian.foerster@eawag.ch", role="cre")

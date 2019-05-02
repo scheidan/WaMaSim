@@ -9,7 +9,7 @@ Computer Laboratory at ETH Zurich, Switzerland.
 
 ## Installation
 
-1. Install [R](https://cloud.r-project.org/) and [R-Studio](https://www.rstudio.com/products/RStudio/) or any other editor.
+1. Install [R](https://cran.r-project.org) and [R-Studio](https://www.rstudio.com/products/RStudio/) or any other editor.
 
 2. Install `devtools` (type in the R command line)
 ```

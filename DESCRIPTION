@@ -12,8 +12,7 @@ Author: Andreas Scheidegger [aut],
   Rachel Barrett [aut],
   Christian Foerster [cre]
 Maintainer: Christian Foerster <christian.foerster@eawag.ch>
-Description: This is a teaching tool for the Water Infrastructure Experimental 
-   and Computer Laboratory at ETH Zurich, Switzerland.
+Description: WaMaSim (Water Management Simulator) is a tool, that models the outcome of various rehabilitation strategies for water distribution systems. Pipe breaks and the corresponding damage and rehabilitation costs are simulated. It is mainly intended to be used as educational tool for the Water Infrastructure Experimental and Computer Laboratory at ETH Zurich, Switzerland.
 Encoding: UTF-8
 URL: https://github.com/scheidan/WaMaSim
 BugReports: https://github.com/scheidan/WaMaSim/issues

@@ -9,19 +9,19 @@ Computer Laboratory at ETH Zurich, Switzerland.
 
 ## Installation
 
-1. Install [R](https://cran.r-project.org) and [R-Studio](https://www.rstudio.com/products/RStudio/) or any other editor.
+1. Install [R](https://cran.r-project.org) and
+   [R-Studio](https://www.rstudio.com/products/RStudio/) (or any other editor).
 
-2. Install `devtools` (type in the R command line)
+2. Install `WaMaSim` (type in the R command line):
 ```
-install.packages("devtools")
+install.packages("WaMaSim")
 ```
 
-3. Install WaMaSim (type in the R command line)
+Alternatively, install the latest version directly from GitHub:
 ```
 library(devtools)
 install_github("scheidan/WaMaSim")
 ```
-
 
 ## Usage
 

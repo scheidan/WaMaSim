@@ -104,6 +104,7 @@ initiate.network <- function(inventory=0,
 ##' given its age, number of previous failures, and the age at the last failure (if any).
 ##' @param income either a scalar describing the annual income, or a vector of length \code{n.years}.
 ##' @param free.expansion if \code{TRUE} costs for network expansion are not deducted from the budget.
+##' @param verbose, print simulation progress is \code{TRUE}.
 ##' @return an updated state list
 ##' @seealso \code{\link{simulate_network}} provides a slightly more convenient interface.
 ##' @author Andreas Scheidegger
@@ -146,8 +147,9 @@ initiate.network <- function(inventory=0,
 ##'    expansion = 10,                  # build 10 pipes per year (if money is available)
 ##'    rehabilitation = mystrategy,     # use the strategy defined above
 ##'    prob.failure = prob.failure.exp, # use the probability function defined above
-##'    income = 1e6                     # the annual income
-##'                  
+##'    income = 1e6,                    # the annual income
+##'    verbose = TRUE                   # print simulation progress
+##' 
 ##'    )                    
 ##' 
 ##' statelist <- simulate_network.period(
@@ -157,8 +159,9 @@ initiate.network <- function(inventory=0,
 ##'    expansion = 2,                   # now, build only 2 pipes per year (if money is available)
 ##'    rehabilitation = mystrategy,     # use the strategy defined above
 ##'    prob.failure = prob.failure.exp, # use the probability function defined above
-##'    income = 1e6                     # the annual income
-##'                  
+##'    income = 1e6,                    # the annual income
+##'    verbose = TRUE                   # print simulation progress
+##' 
 ##'    )     
 ##' 
 ##' 
@@ -173,7 +176,8 @@ simulate_network.period <- function(statelist,
                                     rehabilitation,
                                     prob.failure,
                                     income=0,
-                                    free.expansion=TRUE) {
+                                    free.expansion=TRUE,
+                                    verbose=FALSE) {
 
   last.year <- statelist[[length(statelist)]]$time
   state <- statelist[[length(statelist)]]
@@ -187,7 +191,7 @@ simulate_network.period <- function(statelist,
     ## loop over time
     i <- 1
     for(t in (last.year+1):(last.year+n.years)){
-        if(t%%10==0){
+        if((t%%10==0)&&(verbose)){
             print(paste("Simulate year", t))
         }
         
@@ -248,6 +252,7 @@ simulate_network.period <- function(statelist,
 ##' number of initial pipes, or alternatively it can be a \code{data.frame}
 ##' containing the initial inventory of pipes.
 ##' @param free.expansion if \code{TRUE} costs for network expansion are not deducted from the budget.
+##' @param verbose, prints simulation progress if \code{TRUE}
 ##' 
 ##' @return an updated state list
 ##' 
@@ -295,8 +300,9 @@ simulate_network.period <- function(statelist,
 ##'     income = 1e6,                    # the annual income
 ##'     initial.budget = 1e7,   
 ##'     initial.inventory = 50,          # start the simulation with 50 new pipes
-##'     free.expansion = FALSE
-##'      
+##'     free.expansion = FALSE,
+##'     verbose = TRUE                   # print simulation progress
+##'
 ##'      )          
 ##' 
 ##' ## look at some results
@@ -312,7 +318,8 @@ simulate_network <- function(n.years,
                              income=0,
                              initial.budget=Inf,
                              initial.inventory=NULL,
-                             free.expansion=TRUE) {
+                             free.expansion=TRUE,
+                             verbose=FALSE) {
 
   statelist <- initiate.network(initial.inventory, initial.budget)
   statelist <- simulate_network.period(statelist,
@@ -321,7 +328,8 @@ simulate_network <- function(n.years,
                                        rehabilitation = rehabilitation,
                                        prob.failure=prob.failure, 
                                        income = income,
-                                       free.expansion = free.expansion)
+                                       free.expansion = free.expansion,
+                                       verbose = verbose)
   return(statelist)
 
 }
